@@ -1,8 +1,9 @@
-package com.kosign.bizaddress;
+package com.kosign.bizaddress.main;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
+
+import com.kosign.bizaddress.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,6 +11,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_main);
-        Toast.makeText(MainActivity.this, "테스트", Toast.LENGTH_SHORT).show();
+
     }
 }
