@@ -11,9 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="글쓰기"
         android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/white" />
+        android:textStyle="bold" />
 
 </LinearLayout>

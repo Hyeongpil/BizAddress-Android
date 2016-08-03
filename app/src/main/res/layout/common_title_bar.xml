@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/biz_comm_navigationbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <!--common title
+    1. img left            + title middle
+    2.                       title middle
+    3. img  +  title left  +                +   img right
+    4. img  +  title left  +                +  text right
+    5. img  +  title left
+    6. title left          +                +  img(1) + img(2) right
+    7. title left          +                +  img(2) right
+    8. title left
+    -->
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <!--layout 1 (common title 1 and 2)
+        layout 2 (common title 3, 4, 5)
+        layout 3 (common title 6, 7, 8)-->
+
+        <!--layout 1-->
+        <RelativeLayout
+            android:id="@+id/rl_title_1"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="@color/common_titlebar"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_title1_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/main_back_icon" />
+
+            <TextView
+                android:id="@+id/tv_title1_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Title"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <!--layout 2-->
+        <RelativeLayout
+            android:id="@+id/rl_title_2"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="@color/common_titlebar"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_title2_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/main_close_icon" />
+
+            <TextView
+                android:id="@+id/tv_title2_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_title2_left"
+                android:text="Title"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/iv_title2_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible" />
+                    <!--android:background="@drawable/main_edit_icon"-->
+                    <!--android:visibility="gone" />-->
+
+                <TextView
+                    android:id="@+id/tv_title2_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="23dp"
+                    android:text="다음"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <!--layout 3-->
+        <RelativeLayout
+            android:id="@+id/rl_title_3"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="@color/common_titlebar">
+
+            <TextView
+                android:id="@+id/tv_title3_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="Title"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>

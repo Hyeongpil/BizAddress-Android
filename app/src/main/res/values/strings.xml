@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BizAddress</string>
+
+    <string name="login_id_hint">아이디</string>
+    <string name="login_pwd_hint">비밀번호</string>
+    <string name="login_login">로그인</string>
+    <string name="login_auto">자동 로그인</string>
 </resources>
