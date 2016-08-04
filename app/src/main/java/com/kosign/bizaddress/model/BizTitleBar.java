@@ -61,6 +61,7 @@ public class BizTitleBar extends RelativeLayout {
 			6. title left          +                +  img(1) + img(2) right
 			7. title left          +                +  img(2) right
 			8. title left
+			9. menu                + title middle   +  settings
 		*/
 		
 		//+ type
@@ -102,8 +103,39 @@ public class BizTitleBar extends RelativeLayout {
 			findViewById(R.id.tv_title2_right).setVisibility(View.GONE);
 			findViewById(R.id.iv_title2_right).setVisibility(View.GONE);
 			mTvTitle =(TextView)findViewById(R.id.tv_title2_title);
-		}
+		} else if(strType.equals("6")) {
+			findViewById(R.id.rl_title_1).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_2).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_3).setVisibility(View.VISIBLE);
 
+//			findViewById(R.id.iv_title3_right1).setVisibility(View.VISIBLE);
+//			findViewById(R.id.iv_title3_right2).setVisibility(View.VISIBLE);
+
+			mTvTitle =(TextView)findViewById(R.id.tv_title3_title);
+		} else if(strType.equals("7")) {
+			findViewById(R.id.rl_title_1).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_2).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_3).setVisibility(View.VISIBLE);
+//
+//			findViewById(R.id.iv_title3_right1).setVisibility(View.GONE);
+//			findViewById(R.id.iv_title3_right2).setVisibility(View.VISIBLE);
+			mTvTitle =(TextView)findViewById(R.id.tv_title3_title);
+		} else if (strType.equals("8")) {
+			findViewById(R.id.rl_title_1).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_2).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_3).setVisibility(View.VISIBLE);
+//
+//			findViewById(R.id.iv_title3_right1).setVisibility(View.GONE);
+//			findViewById(R.id.iv_title3_right2).setVisibility(View.GONE);
+			mTvTitle =(TextView)findViewById(R.id.tv_title3_title);
+		}else if (strType.equals("9")) {
+			findViewById(R.id.rl_title_1).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_2).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_3).setVisibility(View.GONE);
+			findViewById(R.id.rl_title_4).setVisibility(View.VISIBLE);
+
+			mTvTitle =(TextView)findViewById(R.id.tv_title4_title);
+		}
 	}
 
 	/**
@@ -132,7 +164,8 @@ public class BizTitleBar extends RelativeLayout {
 		findViewById(R.id.iv_title2_left).setOnClickListener(clickListener);
 		findViewById(R.id.iv_title2_right).setOnClickListener(clickListener);
 		findViewById(R.id.tv_title2_right).setOnClickListener(clickListener);
-
+		findViewById(R.id.iv_title4_right).setOnClickListener(clickListener);
+		findViewById(R.id.iv_title4_left).setOnClickListener(clickListener);
 	}
 
 	public String getType() {
