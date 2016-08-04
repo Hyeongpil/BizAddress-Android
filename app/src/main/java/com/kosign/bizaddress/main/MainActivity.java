@@ -13,7 +13,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
+import com.kosign.bizaddress.api.retrofit.DivisionThread;
 import com.kosign.bizaddress.api.retrofit.EmplThread;
+import com.kosign.bizaddress.main.address.AddressFragment;
+import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.ViewPageAdapter;
 
@@ -40,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         getEmplData();
+        getDivisionData();
         setViewpager();
-
     }
 
     private void init(){
@@ -50,10 +53,24 @@ public class MainActivity extends AppCompatActivity {
         menu.setOnClickListener(menuClickListener);
     }
 
+    /**
+     * emplThread 에서 직원 데이터를 받아
+     * EmplDataReceiveHandler 로 리턴
+     */
     private void getEmplData(){
         Handler EmplHandler = new EmplDataReceiveHandler();
         Thread emplThread = new EmplThread(EmplHandler, MainActivity.this);
         emplThread.start();
+    }
+
+    /**
+     * emplThread 에서 직원 데이터를 받아
+     * EmplDataReceiveHandler 로 리턴
+     */
+    private void getDivisionData(){
+        Handler divisionHandler = new DivisionDataReceiveHandler();
+        Thread divisionThread = new DivisionThread(divisionHandler,MainActivity.this);
+        divisionThread.start();
     }
 
     private void setViewpager(){
@@ -72,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }
-
+    //메뉴 클릭
     ImageView.OnClickListener menuClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -88,7 +105,14 @@ public class MainActivity extends AppCompatActivity {
             try {userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
 
-
+            addressFragment.setData(userdata);
+        }
+    }
+    //DivisionThread 에서 받아옴
+    private class DivisionDataReceiveHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
         }
     }
 }

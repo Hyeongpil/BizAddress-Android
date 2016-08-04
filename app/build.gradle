@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.kosign.bizaddress"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -24,6 +24,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:23.3.0'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile 'jp.wasabeef:glide-transformations:1.0.6@aar'//  이미지 원형으로
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
 }

@@ -1,4 +1,4 @@
-package com.kosign.bizaddress.main;
+package com.kosign.bizaddress.main.division;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +15,8 @@ import com.kosign.bizaddress.R;
  * Created by Hyeongpil on 2016. 8. 3..
  */
 public class DivisionFragment extends Fragment{
-    RecyclerView divi_recycler;
+    private RecyclerView divi_recycler;
+
 
     @Nullable
     @Override
@@ -25,6 +26,7 @@ public class DivisionFragment extends Fragment{
 
         return view;
     }
+
     private void init(){
 //        adapter = new Division_Adapter(getActivity(),new Find_Dis_ClickListener());
 //        divi_recycler.setAdapter(adapter);
