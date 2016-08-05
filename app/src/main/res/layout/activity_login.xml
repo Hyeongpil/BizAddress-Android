@@ -58,7 +58,7 @@
                     android:textColorHint="#a4a4a4"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:text="expert00"/>
+                    android:text="kimhowoong2"/>
 
 
                 <ImageView
@@ -108,7 +108,7 @@
                             android:textColor="#3e4449"
                             android:textStyle="bold"
                             android:textSize="15sp"
-                            android:text="qwer1234!"/>
+                            android:text="korea2001"/>
                     </FrameLayout>
 
                     <LinearLayout

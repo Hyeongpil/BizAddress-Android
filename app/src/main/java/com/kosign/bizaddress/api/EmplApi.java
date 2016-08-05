@@ -39,7 +39,7 @@ public class EmplApi {
         }
         mEmplInfoSchUserApiId = "emplinfo05";
         mEmplInfoMyGrpApiId = "emplinfo09";
-        mEmplInfoDvsnListApiId = "emplinfo19";
+        mEmplInfoDvsnListApiId = "emplinfo21";
     }
 
     public static EmplApi getInstance() {

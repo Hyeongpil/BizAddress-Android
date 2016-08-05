@@ -1,4 +1,4 @@
-package com.kosign.bizaddress.api.retrofit;
+package com.kosign.bizaddress.main.retrofit;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -119,13 +119,14 @@ public class EmplThread extends Thread {
                 if(response.isSuccessful()){
                     Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
-                    int count =  Integer.parseInt(emplRepo.getResp_data().get(0).getTOTL_RSLT_CNT());
+                    int count = emplRepo.getResp_data().get(0).getREC().size();
 
                     for (int i = 0 ; i < count; i++){
                         UserInfo temp= new UserInfo();
                         ArrayList<EmplRepo.RESP_DATA.REC> rec = emplRepo.getResp_data().get(0).getREC();
+                        String[] company = rec.get(i).getCompany().split(" ");
                         temp.setStrName(rec.get(i).getName());
-                        temp.setStrCompany(rec.get(i).getCompany());
+                        temp.setStrCompany(company[0]);
                         temp.setStrDivision(rec.get(i).getDivision());
                         temp.setStrEmail(rec.get(i).getEmail());
                         temp.setStrPhoneNum(rec.get(i).getPhoneNum());

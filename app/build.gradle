@@ -28,4 +28,5 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:1.0.6@aar'//  이미지 원형으로
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1' // 확장 리사이클러뷰
 }

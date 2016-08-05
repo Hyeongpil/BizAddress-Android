@@ -1,4 +1,4 @@
-package com.kosign.bizaddress.api.retrofit;
+package com.kosign.bizaddress.main.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 

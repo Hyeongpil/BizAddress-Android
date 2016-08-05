@@ -1,4 +1,4 @@
-package com.kosign.bizaddress.api.retrofit;
+package com.kosign.bizaddress.main.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -16,10 +16,12 @@ import retrofit2.http.Query;
  */
 public class DivisionRepo implements Serializable{
     @SerializedName("RESP_DATA") ArrayList<RESP_DATA> RESP_DATA;
+    @SerializedName("RSLT_CD") String RSLT_CD;
+    @SerializedName("RSLT_MSG") String RSLT_MSG;
 
     public class RESP_DATA {
         @SerializedName("REC") ArrayList<REC> REC;
-        @SerializedName("INQ_TOTL_NCNT") String INQ_TOTL_NCNT; // 총 조회 건수
+//        @SerializedName("INQ_TOTL_NCNT") String INQ_TOTL_NCNT; // 총 조회 건수
 
         public class REC {
             @SerializedName("DVSN_NM") String division; // 부서 명
@@ -34,10 +36,12 @@ public class DivisionRepo implements Serializable{
         }
         public ArrayList<DivisionRepo.RESP_DATA.REC> getREC() {return REC;}
 
-        public String getINQ_TOTL_NCNT() {return INQ_TOTL_NCNT;}
+//        public String getINQ_TOTL_NCNT() {return INQ_TOTL_NCNT;}
     }
 
-    public ArrayList<RESP_DATA> getResp_data() {return RESP_DATA;}
+    public ArrayList<DivisionRepo.RESP_DATA> getRESP_DATA() {return RESP_DATA;}
+    public String getRSLT_CD() {return RSLT_CD;}
+    public String getRSLT_MSG() {return RSLT_MSG;}
 
     public interface DivisionApiInterface {
         @GET("gw/ApiGate")

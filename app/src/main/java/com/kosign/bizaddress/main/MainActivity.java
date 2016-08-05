@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.api.retrofit.DivisionThread;
-import com.kosign.bizaddress.api.retrofit.EmplThread;
 import com.kosign.bizaddress.main.address.AddressFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
+import com.kosign.bizaddress.main.retrofit.DivisionThread;
+import com.kosign.bizaddress.main.retrofit.EmplThread;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.ViewPageAdapter;
 
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            divisionFragment.setData(msg.getData());
         }
     }
 }
