@@ -50,6 +50,8 @@ public class AddressFragment extends Fragment {
     private class AddressClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            int position = add_recycler.getChildLayoutPosition(view);
+
             Toast.makeText(getActivity(), "클릭됐어요", Toast.LENGTH_SHORT).show();
         }
     }

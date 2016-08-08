@@ -29,7 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     final static String TAG = "MainActivity";
     private Context mContext;
-    private ImageView menu;
+    private ImageView refresh;
     private ViewPageAdapter adapter;
     private ViewPager viewPager;
     private AddressFragment addressFragment;
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void init(){
         mContext = MainActivity.this;
-        menu = (ImageView)findViewById(R.id.iv_title4_left);
-        menu.setOnClickListener(menuClickListener);
+        refresh = (ImageView)findViewById(R.id.iv_title4_left);
+        refresh.setOnClickListener(refreshClickListener);
     }
 
     /**
@@ -73,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
         divisionThread.start();
     }
 
+    /**
+     * DivisionViewHolder 에서 부서 클릭 시
+     * 부서별 직원 데이터를 받아와 addressFragment에 데이터 입력
+     * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
+     */
+    public void getDivisionEmplData(ArrayList<UserInfo> userdata){
+        addressFragment.setData(userdata);
+        viewPager.setCurrentItem(0);
+    }
+
     private void setViewpager(){
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
@@ -89,15 +99,18 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }
-    //메뉴 클릭
-    ImageView.OnClickListener menuClickListener = new View.OnClickListener(){
+    //새로고침 버튼을 누르면 직원 데이터 불러옴
+    ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            Log.e(TAG,"메뉴 클릭");
+            getEmplData();
         }
     };
 
-    //EmplThread 에서 받아옴
+    /**
+     * EmplThread 에서 데이터를 받아
+     * addressFragment 에 전달
+     */
     private class EmplDataReceiveHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
@@ -108,7 +121,11 @@ public class MainActivity extends AppCompatActivity {
             addressFragment.setData(userdata);
         }
     }
-    //DivisionThread 에서 받아옴
+
+    /**
+     * DivisionThread 에서 데이터를 받아
+     * divisionFragment 에 전달
+     */
     private class DivisionDataReceiveHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {

@@ -3,6 +3,8 @@ package com.kosign.bizaddress.util;
 import android.app.Activity;
 import android.app.Application;
 
+import java.util.HashMap;
+
 /**
  * Created by Hyeongpil on 2016. 8. 4..
  */
@@ -10,6 +12,7 @@ public class GlobalApplication extends Application {
     private static volatile GlobalApplication instance = null;
     private static volatile Activity currentActivity = null;
     private EmplPreference pref;
+    private HashMap<String,String> division_map = new HashMap<>(); // 부서 코드를 담고 있는 부서 해시맵 < 이름 , 부서코드 >
 
     public static Activity getCurrentActivity() {
         return currentActivity;
@@ -48,4 +51,5 @@ public class GlobalApplication extends Application {
     public EmplPreference getPref() {
         return pref;
     }
+    public HashMap<String, String> getDivision_map() {return division_map;}
 }

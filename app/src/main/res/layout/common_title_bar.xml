@@ -152,7 +152,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/menu" />
+                android:background="@drawable/refresh" />
 
             <TextView
                 android:id="@+id/tv_title4_title"

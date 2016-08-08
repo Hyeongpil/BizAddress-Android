@@ -25,6 +25,7 @@ public class EmplApi {
     public static final String mEmplInfoSchUserApiId;
     public static final String mEmplInfoMyGrpApiId;
     public static final String mEmplInfoDvsnListApiId;
+    public static final String mDvsnEmplListApiId;
 
     static{
         //개발
@@ -40,6 +41,7 @@ public class EmplApi {
         mEmplInfoSchUserApiId = "emplinfo05";
         mEmplInfoMyGrpApiId = "emplinfo09";
         mEmplInfoDvsnListApiId = "emplinfo21";
+        mDvsnEmplListApiId = "emplinfo25";
     }
 
     public static EmplApi getInstance() {

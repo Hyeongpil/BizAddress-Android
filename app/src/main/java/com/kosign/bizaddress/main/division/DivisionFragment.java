@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +34,13 @@ public class DivisionFragment extends Fragment{
 
     public void setData (Bundle bundle){
         this.highDivision = (ArrayList<HighDivision>) bundle.getSerializable("highDivision");
-        for(int i= 0 ; i<highDivision.size(); i++){
-            Log.e(TAG,"high :"+highDivision.get(i).getHighDivision_name());
-            for(int j = 0; j< highDivision.get(i).getDivision().size(); j++){
-                Log.e(TAG,"division :"+highDivision.get(i).getDivision().get(j).getDivision_name());
-            }
-        }
+//        데이터 보는 로그
+//        for(int i= 0 ; i<highDivision.size(); i++){
+//            Log.e(TAG,"high :"+highDivision.get(i).getHighDivision_name());
+//            for(int j = 0; j< highDivision.get(i).getDivision().size(); j++){
+//                Log.e(TAG,"division :"+highDivision.get(i).getDivision().get(j).getDivision_name());
+//            }
+//        }
         init();
     }
 
@@ -69,4 +69,5 @@ public class DivisionFragment extends Fragment{
         super.onSaveInstanceState(outState);
         adapter.onSaveInstanceState(outState);
     }
+
 }

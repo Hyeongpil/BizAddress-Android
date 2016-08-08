@@ -120,10 +120,9 @@ public class EmplThread extends Thread {
                     Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
                     int count = emplRepo.getResp_data().get(0).getREC().size();
-
+                    ArrayList<EmplRepo.RESP_DATA.REC> rec = emplRepo.getResp_data().get(0).getREC();
                     for (int i = 0 ; i < count; i++){
                         UserInfo temp= new UserInfo();
-                        ArrayList<EmplRepo.RESP_DATA.REC> rec = emplRepo.getResp_data().get(0).getREC();
                         String[] company = rec.get(i).getCompany().split(" ");
                         temp.setStrName(rec.get(i).getName());
                         temp.setStrCompany(company[0]);

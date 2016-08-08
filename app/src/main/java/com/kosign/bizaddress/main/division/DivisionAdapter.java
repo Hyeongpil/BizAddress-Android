@@ -18,14 +18,17 @@ import java.util.ArrayList;
  * Created by Hyeongpil on 2016. 8. 5..
  */
 public class DivisionAdapter extends ExpandableRecyclerAdapter<HighDivisionViewHolder, DivisionViewHolder> {
-
+    final static String TAG = "DivisionAdapter";
+    private Context mContext;
     private LayoutInflater mInflator;
 
     public DivisionAdapter(Context context, @NonNull ArrayList<? extends ParentListItem> parentItemList) {
         super(parentItemList);
         mInflator = LayoutInflater.from(context);
+        mContext = context;
     }
 
+    //  https://bignerdranch.github.io/expandable-recycler-view/ 사용
     @Override
     public HighDivisionViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
         View highDivisionView = mInflator.inflate(R.layout.division_high_item, parentViewGroup, false);
@@ -34,18 +37,18 @@ public class DivisionAdapter extends ExpandableRecyclerAdapter<HighDivisionViewH
 
     @Override
     public DivisionViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
-        View ingredientView = mInflator.inflate(R.layout.division_item, childViewGroup, false);
-        return new DivisionViewHolder(ingredientView);
+        View divisionView = mInflator.inflate(R.layout.division_item, childViewGroup, false);
+        return new DivisionViewHolder(divisionView,mContext);
     }
 
     @Override
-    public void onBindParentViewHolder(HighDivisionViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
+    public void onBindParentViewHolder(HighDivisionViewHolder parentViewHolder, final int position, ParentListItem parentListItem) {
         HighDivision highDivision =  (HighDivision) parentListItem;
         parentViewHolder.getHighDivision_name().setText(highDivision.getHighDivision_name());
     }
 
     @Override
-    public void onBindChildViewHolder(DivisionViewHolder childViewHolder, int position, Object childListItem) {
+    public void onBindChildViewHolder(final DivisionViewHolder childViewHolder, final int position, Object childListItem) {
         Division division = (Division) childListItem;
         childViewHolder.getDivision_name().setText(division.getDivision_name());
     }

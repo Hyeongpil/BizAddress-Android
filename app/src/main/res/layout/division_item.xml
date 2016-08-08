@@ -4,7 +4,7 @@
     android:layout_height="wrap_content" android:padding="16dp">
 
     <TextView
-        android:id="@+id/division_middle_name"
+        android:id="@+id/division_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="중간 부서"

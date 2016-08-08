@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,17 +40,15 @@ public class DivisionThread extends Thread {
     private JSONObject mApiTrnHead = new JSONObject();
     private JSONObject mApiTrnReqData = new JSONObject();
 
-    private int nPageNo = 1; // 페이지 번호
-    private int nPagePerCnt = 20; // 페이지당 갯수
-    private int nTOTL_PAGE_NCNT = 0; // 총 조회 페이지
-
     private String company;
     private ArrayList<HighDivision> highDivision;
+    private HashMap<String, String> division_map;
 
     //기본
     public DivisionThread(Handler handler, Context mContext) {
         this.mContext = mContext;
         this.handler = handler;
+        division_map = GlobalApplication.getInstance().getDivision_map(); // 부서 맵 초기화
     }
 
     @Override
@@ -59,9 +58,6 @@ public class DivisionThread extends Thread {
         try {
             String strChnlId = StringUtil.nvl((String) "CHNL_1"); // 채널 id
             String strUseInttId = StringUtil.nvl((String) pref.getString("USE_INTT_ID")); // 이용기관 id
-            String strPagePerCnt = StringUtil.nvl((String) String.valueOf(nPagePerCnt)); // 한 페이지에 출력되는 결과 수
-            String strPageNo = StringUtil.nvl((String) String.valueOf(nPageNo)); // 페이지 번호 기본 1
-//            String strDvsnNm = StringUtil.nvl((String) pref.getString(""));
 
             // 필수
             mApiTrnHead.put("SVC_CD", EmplApi.mEmplInfoDvsnListApiId);
@@ -74,9 +70,6 @@ public class DivisionThread extends Thread {
 
             mApiTrnReqData.put("ACVT_YN", "Y");
             mApiTrnReqData.put("LRRN_DVSN_INLS_YN","Y");
-//            mApiTrnReqData.put("DVSN_NM", "");
-//            mApiTrnReqData.put("PAGE_PER_CNT", strPagePerCnt);
-//            mApiTrnReqData.put("PAGE_NO", strPageNo);
 
         } catch (JSONException e) {
             Log.e(TAG, "JsonError :" + e.getMessage());
@@ -109,12 +102,14 @@ public class DivisionThread extends Thread {
                         }//중간 부서
                         else if(highDivision.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())){
                             highDivision.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(),rec.get(i).getDivision_cd()));
+                            division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 코드 추가
                             division_count++;
                         }else{//하위 부서도 중간부서에 포함
                             for(int j = 0; j < highDivision.get(highDivision_count).getDivision().size(); j++){
                                 if(highDivision.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())){
                                     String temp = "   ㄴ "+rec.get(i).getDivision(); // 하위 부서는 앞에 공백을 추가
                                     highDivision.get(highDivision_count).getDivision().add(new Division(temp,rec.get(i).getDivision_cd()));
+                                    division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd());
                                     division_count++;
                                     break;
                                 }

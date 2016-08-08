@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.model.HighDivision;
 import com.kosign.bizaddress.util.GlobalApplication;
 
 /**
@@ -26,10 +25,6 @@ public class HighDivisionViewHolder extends ParentViewHolder {
         super(itemView);
         highDivision_name = (TextView) itemView.findViewById(R.id.division_high_name);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.division_high_arrow);
-    }
-
-    public void bind(HighDivision highDivision) {
-        highDivision_name.setText(highDivision.getHighDivision_name());
     }
 
     //화살표 회전 애니메이션
