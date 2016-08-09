@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Created by Hyeongpil on 2016-08-03.
+ * Created by jung
  */
 
 public class LoginActivity extends AppCompatActivity{

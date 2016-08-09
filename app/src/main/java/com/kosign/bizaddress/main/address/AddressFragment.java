@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.EditText;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.MainActivity;
@@ -27,11 +27,12 @@ import java.util.ArrayList;
  */
 public class AddressFragment extends Fragment {
     final static String TAG = "AddressFragment";
+    private Bundle outstate;
     private RecyclerView add_recycler;
     private AddressAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
     private ArrayList<UserInfo> mListData;
-    private FrameLayout address_call;
+    private EditText search_et;
     private int page;
 
     @Nullable
@@ -45,8 +46,10 @@ public class AddressFragment extends Fragment {
     }
 
     private void init(View view){
+        outstate = new Bundle();
         add_recycler = (RecyclerView) view.findViewById(R.id.address_recycler);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.address_refresh);
+        search_et = (EditText) view.findViewById(R.id.address_search);
         refreshLayout.setOnRefreshListener(new RefreshListener());
         adapter = new AddressAdapter(getActivity(),new AddressClickListener());
         add_recycler.setAdapter(adapter);
@@ -61,6 +64,12 @@ public class AddressFragment extends Fragment {
         this.mListData = mListData;
         adapter.setData(mListData);
         refreshLayout.setRefreshing(false);
+    }
+
+    public void stopRefresh(){
+        if(refreshLayout.isRefreshing()){
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     private class BottomRefreshListener extends RecyclerView.OnScrollListener {
@@ -120,4 +129,5 @@ public class AddressFragment extends Fragment {
             refreshLayout.setRefreshing(false);
         }
     }
+
 }

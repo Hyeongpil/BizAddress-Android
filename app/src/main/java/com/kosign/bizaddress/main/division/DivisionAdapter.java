@@ -38,7 +38,7 @@ public class DivisionAdapter extends ExpandableRecyclerAdapter<HighDivisionViewH
     @Override
     public DivisionViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
         View divisionView = mInflator.inflate(R.layout.division_item, childViewGroup, false);
-        return new DivisionViewHolder(divisionView,mContext);
+        return new DivisionViewHolder(divisionView, mContext);
     }
 
     @Override

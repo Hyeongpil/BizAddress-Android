@@ -25,20 +25,20 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
             <TextView
-                android:id="@+id/address_company"
-                android:layout_below="@+id/address_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="회사 이름"/>
-            <TextView
                 android:id="@+id/address_division"
                 android:layout_below="@+id/address_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="부서"
+                android:text="부서"/>
+            <TextView
+                android:id="@+id/address_inner_phone"
+                android:layout_below="@+id/address_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내선번호"
                 android:textSize="15dp"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/address_company"/>
+                android:layout_toRightOf="@+id/address_division"/>
         </RelativeLayout>
     </RelativeLayout>
 

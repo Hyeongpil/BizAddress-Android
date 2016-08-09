@@ -16,6 +16,8 @@ import retrofit2.http.Query;
  */
 public class EmplRepo implements Serializable{
     @SerializedName("RESP_DATA") ArrayList<RESP_DATA> RESP_DATA;
+    @SerializedName("RSLT_CD") String RSLT_CD;
+    @SerializedName("RSLT_MSG") String RSLT_MSG;
 
     public class RESP_DATA {
         @SerializedName("REC") ArrayList<REC> REC;
@@ -47,6 +49,8 @@ public class EmplRepo implements Serializable{
     }
 
     public ArrayList<RESP_DATA> getResp_data() {return RESP_DATA;}
+    public String getRSLT_CD() {return RSLT_CD;}
+    public String getRSLT_MSG() {return RSLT_MSG;}
 
     public interface EmplApiInterface {
         @GET("gw/ApiGate")

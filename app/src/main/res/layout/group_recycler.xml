@@ -3,26 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/address_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="이름, 부서"
-        android:drawableStart="@drawable/mini_search"
-        android:focusable="false"/>
-
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/address_refresh"
+        android:id="@+id/group_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/address_recycler"
+            android:id="@+id/group_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
 </LinearLayout>

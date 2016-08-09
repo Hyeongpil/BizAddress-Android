@@ -2,6 +2,7 @@ package com.kosign.bizaddress.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,10 +15,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
+import com.kosign.bizaddress.login.LoginActivity;
 import com.kosign.bizaddress.main.address.AddressFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
+import com.kosign.bizaddress.main.group.GroupFragment;
 import com.kosign.bizaddress.main.retrofit.DivisionThread;
 import com.kosign.bizaddress.main.retrofit.EmplThread;
+import com.kosign.bizaddress.main.retrofit.GroupThread;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.ViewPageAdapter;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private AddressFragment addressFragment;
     private DivisionFragment divisionFragment;
+    private GroupFragment groupFragment;
     private ArrayList<UserInfo> userdata;
     private ProgressDialog dlgProgress;
 
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         getEmplData();
         getDivisionData();
+        getGroupData();
         setViewpager();
     }
 
@@ -71,18 +77,28 @@ public class MainActivity extends AppCompatActivity {
      * emplThread 에서 직원 데이터를 받아
      * EmplDataReceiveHandler 로 리턴
      */
-    private void getDivisionData(){
+    public void getDivisionData(){
         Handler divisionHandler = new DivisionDataReceiveHandler();
         Thread divisionThread = new DivisionThread(divisionHandler,MainActivity.this);
         divisionThread.start();
     }
 
     /**
-     * DivisionViewHolder 에서 부서 클릭 시
+     * GroupThread 에서 그룹 데이터를 받아
+     * GroupDataReceiveHandler 로 리턴
+     */
+    public void getGroupData(){
+        Handler groupHandler = new GroupDataReceiveHandler();
+        Thread groupThread = new GroupThread(groupHandler,MainActivity.this);
+        groupThread.start();
+    }
+
+    /**
+     * DivisionViewHolder 에서 부서 클릭 시 또는 GroupFragment 에서 그룹 클릭 시
      * 부서별 직원 데이터를 받아와 addressFragment에 데이터 입력
      * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
      */
-    public void getDivisionEmplData(ArrayList<UserInfo> userdata){
+    public void getEmplData(ArrayList<UserInfo> userdata){
         addressFragment.setData(userdata);
         viewPager.setCurrentItem(0);
     }
@@ -90,19 +106,24 @@ public class MainActivity extends AppCompatActivity {
     private void setViewpager(){
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
+        groupFragment = new GroupFragment();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         List<Fragment> fragments = new ArrayList<Fragment>();
         fragments.add(addressFragment);
         fragments.add(divisionFragment);
+        fragments.add(groupFragment);
         List<String> titles = new ArrayList<String>();
         titles.add("연락처");
         titles.add("부서");
+        titles.add("그룹");
 
         adapter = new ViewPageAdapter(getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2); // 뷰 페이저 캐싱 페이지 개수
         tabLayout.setupWithViewPager(viewPager);
     }
+
     //새로고침 버튼을 누르면 직원 데이터 불러옴
     ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
@@ -124,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
             dlgProgress.dismiss();
             addressFragment.setData(userdata);
+            stopRefresh();
         }
     }
 
@@ -135,7 +157,39 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            stopRefresh();
             divisionFragment.setData(msg.getData());
         }
+    }
+
+    /**
+     * GroupThread 에서 그룹 데이터를 받아
+     * groupFragment 에 전달
+     */
+    private class GroupDataReceiveHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            stopRefresh();
+            groupFragment.setData(msg.getData());
+        }
+    }
+
+    /**
+     * 주소록 연동 실패 시 로그인 화면으로 돌아감
+     */
+    public void dataException(){
+        dlgProgress.dismiss();
+        startActivity(new Intent(mContext, LoginActivity.class));
+        finish();
+    }
+
+    /**
+     * 오류 발생 시 새로고침 멈춤
+     */
+    public void stopRefresh(){
+        addressFragment.stopRefresh();
+        groupFragment.stopRefresh();
+        divisionFragment.stopRefresh();
     }
 }

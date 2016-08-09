@@ -48,13 +48,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         final UserInfo data = mListData.get(position);
 
         //부서가 있을 땐 회사 / 부서 로 출력
-        String company = data.getStrCompany();
-        if(data.getStrDivision() != null){
-            company = company+" /";
+        String division = data.getStrDivision();
+        if(data.getStrInnerPhoneNum() != null){
+            division = division+" /";
         }
 
         holder.getName().setText(data.getStrName());
-        holder.getCompany().setText(company);
+        holder.getInner_phone().setText(data.getStrInnerPhoneNum());
         holder.getDivision().setText(data.getStrDivision());
 
         //네비게이션 프로필
@@ -99,21 +99,21 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public TextView company;
         public TextView division;
+        public TextView inner_phone;
         public ImageView profileImg;
         public FrameLayout call;
         public AddressViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.address_name);
-            company = (TextView) itemView.findViewById(R.id.address_company);
+            inner_phone = (TextView) itemView.findViewById(R.id.address_inner_phone);
             division = (TextView) itemView.findViewById(R.id.address_division);
             profileImg = (ImageView) itemView.findViewById(R.id.address_img);
             call = (FrameLayout) itemView.findViewById(R.id.address_call);
         }
 
         public TextView getName() {return name;}
-        public TextView getCompany() {return company;}
+        public TextView getInner_phone() {return inner_phone;}
         public TextView getDivision() {return division;}
         public ImageView getProfileImg() {return profileImg;}
         public FrameLayout getCall() {return call;}

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.api.EmplApi;
+import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
@@ -27,6 +28,7 @@ import retrofit2.Retrofit;
 
 /**
  * Created by Hyeongpil on 2016. 8. 4..
+ * 직원 목록을 가져오는 스레드
  */
 
 public class EmplThread extends Thread {
@@ -66,6 +68,13 @@ public class EmplThread extends Thread {
         this.mContext = mContext;
         this.handler = handler;
         this.nPageNo = page;
+    }
+
+    //그룹 검색
+    public EmplThread(String grp_cd, Handler handler, Context mContext) {
+        this.mContext = mContext;
+        this.handler = handler;
+        this.grp_cd = grp_cd;
     }
 
     @Override
@@ -108,6 +117,7 @@ public class EmplThread extends Thread {
             Log.e(TAG, "JsonError :" + e.getMessage());
         }
 
+
         Retrofit client = new Retrofit.Builder().baseUrl(EmplApi.mEmplInfoUrl).addConverterFactory(GsonConverterFactory.create()).build();
         EmplRepo.EmplApiInterface service = client.create(EmplRepo.EmplApiInterface.class);
         Call<EmplRepo> call = service.get_empl_retrofit(mApiTrnHead);
@@ -117,34 +127,41 @@ public class EmplThread extends Thread {
                 if(response.isSuccessful()){
                     Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
-                    int count = emplRepo.getResp_data().get(0).getREC().size();
-                    ArrayList<EmplRepo.RESP_DATA.REC> rec = emplRepo.getResp_data().get(0).getREC();
-                    for (int i = 0 ; i < count; i++){
-                        UserInfo temp= new UserInfo();
-                        String[] company = rec.get(i).getCompany().split(" ");
-                        temp.setStrName(rec.get(i).getName());
-                        temp.setStrCompany(company[0]);
-                        temp.setStrDivision(rec.get(i).getDivision());
-                        temp.setStrEmail(rec.get(i).getEmail());
-                        temp.setStrPhoneNum(rec.get(i).getPhoneNum());
-                        temp.setStrPosition(rec.get(i).getPosition());
-                        temp.setStrProfileImg(rec.get(i).getProfileImg());
-                        temp.setStrInnerPhoneNum(rec.get(i).getInnerPhoneNum());
-                        userdata.add(temp);
+                    if(emplRepo.getRSLT_CD().equals("0000")) { // 응답 정상 처리
+                        int count = emplRepo.getResp_data().get(0).getREC().size();
+                        ArrayList<EmplRepo.RESP_DATA.REC> rec = emplRepo.getResp_data().get(0).getREC();
+                        for (int i = 0; i < count; i++) {
+                            UserInfo temp = new UserInfo();
+                            String[] company = rec.get(i).getCompany().split(" ");
+                            temp.setStrName(rec.get(i).getName());
+                            temp.setStrCompany(company[0]);
+                            temp.setStrDivision(rec.get(i).getDivision());
+                            temp.setStrEmail(rec.get(i).getEmail());
+                            temp.setStrPhoneNum(rec.get(i).getPhoneNum());
+                            temp.setStrPosition(rec.get(i).getPosition());
+                            temp.setStrProfileImg(rec.get(i).getProfileImg());
+                            temp.setStrInnerPhoneNum(rec.get(i).getInnerPhoneNum());
+                            userdata.add(temp);
+                        }
+                        //메인의 EmplDataReceiveHandler 로 보내줌
+                        Message msg = Message.obtain();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("EmplThread", userdata);
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    }else{
+                        Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
+                        ((MainActivity)mContext).stopRefresh();
+                        Log.e(TAG,""+emplRepo.getRSLT_MSG());
                     }
-                    //메인의 EmplDataReceiveHandler 로 보내줌
-                    Message msg = Message.obtain();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("EmplThread", userdata);
-                    msg.setData(bundle);
-                    handler.sendMessage(msg);
                 }
             }
 
             @Override
             public void onFailure(Call<EmplRepo> call, Throwable t) {
-                Log.e(TAG,"실패 :"+t.getMessage());
+                Log.e(TAG,"실패, 요청 메시지:"+call.request());
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
+                ((MainActivity)mContext).dataException();
             }
         });
     }
