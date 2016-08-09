@@ -47,7 +47,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public void onBindViewHolder(AddressViewHolder holder, final int position) {
         final UserInfo data = mListData.get(position);
 
-        //부서가 있을 땐 회사 / 부서 로 출력
+        //내선 번호가 있을 땐 부서 / 내선번호로 출력
         String division = data.getStrDivision();
         if(data.getStrInnerPhoneNum() != null){
             division = division+" /";
