@@ -76,7 +76,7 @@ public class GroupFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
-            ((MainActivity)getActivity()).getEmplData(userdata);
+
             dlgProgress.dismiss();
         }
     }

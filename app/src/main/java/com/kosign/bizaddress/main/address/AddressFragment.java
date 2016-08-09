@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +29,14 @@ import java.util.ArrayList;
  */
 public class AddressFragment extends Fragment {
     final static String TAG = "AddressFragment";
-    private Bundle outstate;
     private RecyclerView add_recycler;
     private AddressAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
     private ArrayList<UserInfo> mListData;
     private EditText search_et;
     private int page;
+    private TextWatcher textWatcher;
+    private boolean searching = false;
 
     @Nullable
     @Override
@@ -46,7 +49,6 @@ public class AddressFragment extends Fragment {
     }
 
     private void init(View view){
-        outstate = new Bundle();
         add_recycler = (RecyclerView) view.findViewById(R.id.address_recycler);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.address_refresh);
         search_et = (EditText) view.findViewById(R.id.address_search);
@@ -58,6 +60,31 @@ public class AddressFragment extends Fragment {
         add_recycler.setLayoutManager(manager);
         add_recycler.setHasFixedSize(true);
         add_recycler.setOnScrollListener(new BottomRefreshListener());
+        setSearch();
+    }
+
+    private void setSearch(){
+        textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(search_et.isFocusable()){
+                    searching = true;
+                    Handler EmplHandler = new SearchEmplReceiveHandler();
+                    Thread emplThread = new EmplThread(EmplHandler, getActivity(), search_et.getText().toString());
+                    emplThread.start();
+                    Log.e(TAG,"search :"+search_et.getText().toString());
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(search_et.getText().toString().equals("")){
+                    searching = false;
+                }
+            }
+        };
+        search_et.addTextChangedListener(textWatcher);
     }
 
     public void setData(ArrayList<UserInfo> mListData){
@@ -83,9 +110,11 @@ public class AddressFragment extends Fragment {
                 GlobalApplication.getInstance().pageCountup(); // 글로벌 어플리케이션의 페이지 카운트를 올려줌
                 page = GlobalApplication.getInstance().getPage(); // 페이지 값을 가져옴
                 refreshLayout.setRefreshing(true);
-                Handler handler = new BottomRefreshHandler();
-                Thread thread = new EmplThread(handler, getActivity(), page);
-                thread.start();
+                if(!searching){ // 검색중이 아닐 때
+                    Handler handler = new BottomRefreshHandler();
+                    Thread thread = new EmplThread(handler, getActivity(), page);
+                    thread.start();
+                }
             }
         }
     }
@@ -114,6 +143,8 @@ public class AddressFragment extends Fragment {
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
+            searching = false;
+            search_et.setText("");
             ((MainActivity)getActivity()).getEmplData();
             GlobalApplication.getInstance().setPage(1);
         }
@@ -127,6 +158,15 @@ public class AddressFragment extends Fragment {
             mListData.addAll(temp);
             adapter.setData(mListData);
             refreshLayout.setRefreshing(false);
+        }
+    }
+
+    private class SearchEmplReceiveHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ArrayList<UserInfo> temp = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
+            adapter.setData(temp);
         }
     }
 

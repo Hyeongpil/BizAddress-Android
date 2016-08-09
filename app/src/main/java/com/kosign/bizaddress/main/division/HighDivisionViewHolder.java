@@ -114,7 +114,7 @@ public class HighDivisionViewHolder extends ParentViewHolder {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("DivisionEmplThread");
-            ((MainActivity)mContext).getEmplData(userdata);
+            ((MainActivity)mContext).getDivisionEmplData(userdata);
             dlgProgress.dismiss();
         }
     }

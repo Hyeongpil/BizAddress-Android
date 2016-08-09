@@ -160,7 +160,7 @@ public class EmplThread extends Thread {
             @Override
             public void onFailure(Call<EmplRepo> call, Throwable t) {
                 Log.e(TAG,"실패, 요청 메시지:"+call.request());
-                Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "주소록 불러오기를 실패했습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
                 ((MainActivity)mContext).dataException();
             }
         });

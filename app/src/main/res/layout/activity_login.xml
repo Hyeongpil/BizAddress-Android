@@ -110,8 +110,7 @@
                             android:textColor="#3e4449"
                             android:textStyle="bold"
                             android:textSize="15sp"
-                            android:text="auseh0512"
-                             />
+                            android:text="auseh0512" />
                     </FrameLayout>
                     <!--android:text="korea2001"-->
 

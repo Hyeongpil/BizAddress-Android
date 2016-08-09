@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/address_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="이름, 부서"
-        android:drawableStart="@drawable/mini_search"
-        android:focusable="false"/>
+        android:drawableStart="@drawable/mini_search"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/address_refresh"

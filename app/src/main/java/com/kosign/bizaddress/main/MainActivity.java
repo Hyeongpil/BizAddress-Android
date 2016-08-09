@@ -2,7 +2,6 @@ package com.kosign.bizaddress.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.login.LoginActivity;
 import com.kosign.bizaddress.main.address.AddressFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.main.group.GroupFragment;
@@ -98,10 +96,12 @@ public class MainActivity extends AppCompatActivity {
      * 부서별 직원 데이터를 받아와 addressFragment에 데이터 입력
      * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
      */
-    public void getEmplData(ArrayList<UserInfo> userdata){
+    public void getDivisionEmplData(ArrayList<UserInfo> userdata){
         addressFragment.setData(userdata);
         viewPager.setCurrentItem(0);
     }
+
+
 
     private void setViewpager(){
         addressFragment = new AddressFragment();
@@ -176,12 +176,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 주소록 연동 실패 시 로그인 화면으로 돌아감
+     * 주소록 연동 실패
      */
     public void dataException(){
         dlgProgress.dismiss();
-        startActivity(new Intent(mContext, LoginActivity.class));
-        finish();
+
     }
 
     /**
