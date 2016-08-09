@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.main.retrofit.DivisionThread;
 import com.kosign.bizaddress.main.retrofit.EmplThread;
 import com.kosign.bizaddress.model.UserInfo;
+import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.ViewPageAdapter;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private AddressFragment addressFragment;
     private DivisionFragment divisionFragment;
     private ArrayList<UserInfo> userdata;
+    private ProgressDialog dlgProgress;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
+        dlgProgress = ProgressDialog.show(MainActivity.this, null, "잠시만 기다려 주세요.");
         mContext = MainActivity.this;
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         refresh.setOnClickListener(refreshClickListener);
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
      * emplThread 에서 직원 데이터를 받아
      * EmplDataReceiveHandler 로 리턴
      */
-    private void getEmplData(){
+    public void getEmplData(){
         Handler EmplHandler = new EmplDataReceiveHandler();
         Thread emplThread = new EmplThread(EmplHandler, MainActivity.this);
         emplThread.start();
@@ -104,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             getEmplData();
+            GlobalApplication.getInstance().setPage(1);
         }
     };
 
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             try {userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
-
+            dlgProgress.dismiss();
             addressFragment.setData(userdata);
         }
     }

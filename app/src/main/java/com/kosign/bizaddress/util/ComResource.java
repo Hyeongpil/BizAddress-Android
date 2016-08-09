@@ -5,5 +5,5 @@ package com.kosign.bizaddress.util;
  */
 public class ComResource {
     //1 : 개발 , 2 : 운영
-    public static final int mDevMode = 2;
+    public static final int mDevMode = 1;
 }

@@ -2,12 +2,16 @@ package com.kosign.bizaddress.main.address;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kosign.bizaddress.R;
@@ -21,13 +25,13 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 /**
  * Created by Hyeongpil on 2016. 8. 4..
  */
-public class Address_Recycler_Adapter extends RecyclerView.Adapter<Address_Recycler_Adapter.AddressViewHolder>{
+public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder>{
     final static String TAG = "Address_Adapter";
     private Context mContext;
     public List<UserInfo> mListData = null;
     private View.OnClickListener listener;
 
-    public Address_Recycler_Adapter(Context mContext, View.OnClickListener listener) {
+    public AddressAdapter(Context mContext, View.OnClickListener listener) {
         this.mContext = mContext;
         this.listener = listener;
     }
@@ -40,8 +44,8 @@ public class Address_Recycler_Adapter extends RecyclerView.Adapter<Address_Recyc
     }
 
     @Override
-    public void onBindViewHolder(AddressViewHolder holder, int position) {
-        UserInfo data = mListData.get(position);
+    public void onBindViewHolder(AddressViewHolder holder, final int position) {
+        final UserInfo data = mListData.get(position);
 
         //부서가 있을 땐 회사 / 부서 로 출력
         String company = data.getStrCompany();
@@ -52,12 +56,22 @@ public class Address_Recycler_Adapter extends RecyclerView.Adapter<Address_Recyc
         holder.getName().setText(data.getStrName());
         holder.getCompany().setText(company);
         holder.getDivision().setText(data.getStrDivision());
+
         //네비게이션 프로필
         Glide.with(mContext)
                 .load(data.getStrProfileImg())
                 .error(R.drawable.default_profile)
                 .bitmapTransform(new CropCircleTransformation(Glide.get(mContext).getBitmapPool())).into(holder.getProfileImg());
 
+        //전화 걸기 버튼
+        holder.getCall().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
+                mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+data.getStrPhoneNum())));
+                Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -79,22 +93,29 @@ public class Address_Recycler_Adapter extends RecyclerView.Adapter<Address_Recyc
         });
     }
 
+    public List<UserInfo> getData() {
+        return mListData;
+    }
+
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView company;
         public TextView division;
         public ImageView profileImg;
+        public FrameLayout call;
         public AddressViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.address_name);
             company = (TextView) itemView.findViewById(R.id.address_company);
             division = (TextView) itemView.findViewById(R.id.address_division);
             profileImg = (ImageView) itemView.findViewById(R.id.address_img);
+            call = (FrameLayout) itemView.findViewById(R.id.address_call);
         }
 
         public TextView getName() {return name;}
         public TextView getCompany() {return company;}
         public TextView getDivision() {return division;}
         public ImageView getProfileImg() {return profileImg;}
+        public FrameLayout getCall() {return call;}
     }
 }

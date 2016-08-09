@@ -7,12 +7,14 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/address_img"
+            android:layout_marginLeft="5dp"
             android:layout_width="55dp"
             android:layout_height="55dp"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/address_img">
+            android:layout_toRightOf="@id/address_img"
+            android:layout_marginLeft="10dp">
             <TextView
                 android:id="@+id/address_name"
                 android:layout_width="wrap_content"
@@ -40,26 +42,17 @@
         </RelativeLayout>
     </RelativeLayout>
 
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/address_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:padding="10dp"
+        android:paddingStart="20dp"
         android:layout_gravity="right|center_vertical">
-
         <ImageView
-            android:id="@+id/address_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/add_address"
-            android:layout_marginRight="10dp" />
-        <ImageView
-            android:id="@+id/address_call"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/call"
-            android:layout_marginRight="10dp" />
-    </LinearLayout>
-
+            android:background="@drawable/call"/>
+    </FrameLayout>
 
 </FrameLayout>

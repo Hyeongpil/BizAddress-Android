@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main.division;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ public class DivisionViewHolder extends ChildViewHolder {
     private HashMap<String,String> division_map;
     private String division_code;
     private ArrayList<UserInfo> userdata;
+    private ProgressDialog dlgProgress;
 
     public DivisionViewHolder(View itemView, final Context mContext) {
         super(itemView);
@@ -46,6 +48,8 @@ public class DivisionViewHolder extends ChildViewHolder {
                 }
                 Log.d(TAG,"name :"+division_name.getText());
                 Log.d(TAG,"code :"+division_code);
+
+                dlgProgress = ProgressDialog.show(mContext, null, "잠시만 기다려 주세요.");
                 Handler divisionEmplHandler = new DivisionEmplReceiveHandler();
                 Thread divisionEmplThread = new DivisionEmplThread(divisionEmplHandler, mContext, division_code);
                 divisionEmplThread.start();
@@ -67,6 +71,7 @@ public class DivisionViewHolder extends ChildViewHolder {
             super.handleMessage(msg);
             userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("DivisionEmplThread");
             ((MainActivity)mContext).getDivisionEmplData(userdata);
+            dlgProgress.dismiss();
         }
     }
 }

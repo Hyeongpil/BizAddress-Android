@@ -13,6 +13,7 @@ public class GlobalApplication extends Application {
     private static volatile Activity currentActivity = null;
     private EmplPreference pref;
     private HashMap<String,String> division_map = new HashMap<>(); // 부서 코드를 담고 있는 부서 해시맵 < 이름 , 부서코드 >
+    private int page = 1; // addressfragment 페이지 수
 
     public static Activity getCurrentActivity() {
         return currentActivity;
@@ -51,5 +52,10 @@ public class GlobalApplication extends Application {
     public EmplPreference getPref() {
         return pref;
     }
+
     public HashMap<String, String> getDivision_map() {return division_map;}
+
+    public int getPage() {return page;}
+    public void pageCountup() {this.page++;}
+    public void setPage(int page) {this.page = page;}
 }

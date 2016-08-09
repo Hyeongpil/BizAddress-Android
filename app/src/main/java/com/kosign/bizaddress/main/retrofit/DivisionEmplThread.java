@@ -26,7 +26,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Created by chanyouvita on 2016. 8. 8..
+ * Created by Hyeongpil on 2016. 8. 8..
  */
 public class DivisionEmplThread extends Thread {
     final static String TAG = "EmplThread";
@@ -73,7 +73,6 @@ public class DivisionEmplThread extends Thread {
             mApiTrnHead.put("CHNL_ID", strChnlId);
             mApiTrnHead.put("USE_INTT_ID", strUseInttId);
             mApiTrnHead.put("REQ_DATA", mApiTrnReqData);
-
 
             mApiTrnReqData.put("DVSN_CD", strDvsnCd);
             mApiTrnReqData.put("LRRN_DVSN_INLS_YN", "Y"); // 하위 부서 포함 여부

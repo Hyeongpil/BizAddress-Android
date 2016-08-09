@@ -43,6 +43,7 @@ public class DivisionThread extends Thread {
     private String company;
     private ArrayList<HighDivision> highDivision;
     private HashMap<String, String> division_map;
+    private HashMap<String, String> high_division_map;
 
     //기본
     public DivisionThread(Handler handler, Context mContext) {
@@ -92,17 +93,21 @@ public class DivisionThread extends Thread {
                         //회사 이름
                         if(rec.get(i).getHigh_division() == null){
                             company = rec.get(i).getDivision();
+                            highDivision.add(new HighDivision(rec.get(i).getDivision()));
+                            division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
+                            highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
                             continue;
                         }
                         //상위 부서
                         else if(rec.get(i).getHigh_division().equals(company)){
                             highDivision.add(new HighDivision(rec.get(i).getDivision()));
+                            division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
                             highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
                             division_count = -1; // 상위 부서가 새로 만들어졌으므로 중간 부서 카운트 초기화
                         }//중간 부서
                         else if(highDivision.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())){
                             highDivision.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(),rec.get(i).getDivision_cd()));
-                            division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 코드 추가
+                            division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
                             division_count++;
                         }else{//하위 부서도 중간부서에 포함
                             for(int j = 0; j < highDivision.get(highDivision_count).getDivision().size(); j++){

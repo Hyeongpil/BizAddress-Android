@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity{
     private CheckBox chkBox_auto;
     private ProgressDialog dlgProgress = null;
     private EmplPreference pref;
+    private String loginYN;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +45,11 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         init();
-
+//
+//        if ("Y".equals(loginYN)) { // 자동 로그인 체크되어 있을 경우
+//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//            finish();
+//        }
     }
 
     private void init(){
@@ -54,6 +59,7 @@ public class LoginActivity extends AppCompatActivity{
         btn_login = (Button)findViewById(R.id.login_loginbtn);
         btn_login.setOnClickListener(mClickListener);
         pref= GlobalApplication.getInstance().getPref();
+        loginYN = pref.getString("LOGIN_YN", "N");
     }
 
     Button.OnClickListener mClickListener = new View.OnClickListener() {
@@ -166,7 +172,7 @@ public class LoginActivity extends AppCompatActivity{
 
                     Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivityForResult(myIntent, 200);
-                    Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -180,6 +186,7 @@ public class LoginActivity extends AppCompatActivity{
             }
         }
     }
+
     protected void onActivityResult(int requestCode , int resultCode , Intent intent){
 
         String strLogyn = pref.getString("LOGIN_YN", "N");

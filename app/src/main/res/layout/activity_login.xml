@@ -58,8 +58,8 @@
                     android:textColorHint="#a4a4a4"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:text="kimhowoong2"/>
-
+                    android:text="pktyt22" />
+                <!--android:text="kimhowoong2"-->
 
                 <ImageView
                     android:id="@+id/iv_clear_id"
@@ -108,8 +108,9 @@
                             android:textColor="#3e4449"
                             android:textStyle="bold"
                             android:textSize="15sp"
-                            android:text="korea2001"/>
+                            android:text="auseh0512" />
                     </FrameLayout>
+                    <!--android:text="korea2001"-->
 
                     <LinearLayout
                         android:id="@+id/ll_auto_true"

@@ -46,7 +46,7 @@ public class EmplThread extends Thread {
     private String grp_cd = "";
     private String dvsn_cd = "";
 
-    private ArrayList<UserInfo> userdata;
+    private ArrayList<UserInfo> userdata = new ArrayList<>();
 
     //검색
     public EmplThread(Handler handler, Context mContext, String search) {
@@ -61,19 +61,17 @@ public class EmplThread extends Thread {
         this.handler = handler;
     }
 
-    //그룹 부서
-    public EmplThread(Handler handler, Context mContext, String grp_cd, String dvsn_cd) {
+    //페이지
+    public EmplThread(Handler handler, Context mContext, int page) {
         this.mContext = mContext;
         this.handler = handler;
-        this.grp_cd = grp_cd;
-        this.dvsn_cd = dvsn_cd;
+        this.nPageNo = page;
     }
 
     @Override
     public void run() {
         super.run();
         String strApiTrnOutput = "";
-        userdata = new ArrayList<>();
 
         try {
             // 필수
