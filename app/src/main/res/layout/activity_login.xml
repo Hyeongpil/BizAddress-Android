@@ -101,7 +101,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@null"
-                            android:inputType="textNoSuggestions|textVisiblePassword"
+                            android:inputType="textPassword"
                             android:maxLength="100"
                             android:paddingLeft="10dp"
                             android:hint="@string/login_pwd_hint"

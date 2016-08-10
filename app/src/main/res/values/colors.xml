@@ -13,4 +13,6 @@
     <color name="whitepink">#FCE4EC</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="detailPrimaryDark">#266CA7</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main.address;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.kosign.bizaddress.R;
+import com.kosign.bizaddress.main.DetailActivity;
 import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.main.retrofit.EmplThread;
 import com.kosign.bizaddress.model.UserInfo;
@@ -67,17 +69,15 @@ public class AddressFragment extends Fragment {
     private void setSearch(){
         textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(search_et.isFocusable()){
+                    Log.e(TAG,"search :"+search_et.getText().toString());
                     searching = true;
                     Handler searchHandler = new SearchEmplReceiveHandler();
                     Thread searchThread = new EmplThread(searchHandler, getActivity(), search_et.getText().toString());
                     searchThread.start();
-                    Log.e(TAG,"search :"+search_et.getText().toString());
                 }
             }
             @Override
@@ -127,17 +127,10 @@ public class AddressFragment extends Fragment {
         @Override
         public void onClick(View view) {
             final int position = add_recycler.getChildLayoutPosition(view);
-//            address_add.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString(ContactsContract.Intents.Insert.PHONE, mListData.get(position).getStrPhoneNum());
-//                    intent.putExtras(bundle);
-//                    startActivity(intent);
-//                }
-//            });
-            Log.e(TAG,"클릭");
+            UserInfo temp = mListData.get(position);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("data",temp);
+            startActivity(intent);
         }
     }
 
@@ -147,12 +140,16 @@ public class AddressFragment extends Fragment {
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            searching = false;
-            search_et.setText("");
-            ((MainActivity)getActivity()).getEmplData();
-            GlobalApplication.getInstance().setPage(1); // 직원 목록 페이지 수 초기화
-            GlobalApplication.getInstance().setEmplThreadCount(0); // 검색 스레드 카운트 초기화
+            refreshing();
         }
+    }
+
+    public void refreshing(){
+        searching = false;
+        search_et.setText("");
+        ((MainActivity)getActivity()).getEmplData();
+        GlobalApplication.getInstance().setPage(1); // 직원 목록 페이지 수 초기화
+        GlobalApplication.getInstance().setEmplThreadCount(0); // 검색 스레드 카운트 초기화
     }
 
     private class BottomRefreshHandler extends Handler {
@@ -171,7 +168,6 @@ public class AddressFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ArrayList<UserInfo> temp = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
-            Log.e(TAG,"count :"+msg.getData().getInt("callCount"));
             if(threadCount < msg.getData().getInt("callCount")){ // 가장 나중에 실행된 스레드만 데이터 적용
                 threadCount = msg.getData().getInt("callCount");
                 adapter.setData(temp);

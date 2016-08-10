@@ -45,11 +45,11 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         init();
-//
-//        if ("Y".equals(loginYN)) { // 자동 로그인 체크되어 있을 경우
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//            finish();
-//        }
+
+        if ("Y".equals(loginYN)) { // 자동 로그인 체크되어 있을 경우
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     private void init(){

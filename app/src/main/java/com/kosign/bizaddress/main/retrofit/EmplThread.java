@@ -126,7 +126,6 @@ public class EmplThread extends Thread {
             @Override
             public void onResponse(Call<EmplRepo> call, Response<EmplRepo> response) {
                 if(response.isSuccessful()){
-                    Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
                     if(emplRepo.getRSLT_CD().equals("0000")) { // 응답 정상 처리
                         int count = emplRepo.getResp_data().get(0).getREC().size();

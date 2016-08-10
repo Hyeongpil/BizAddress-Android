@@ -2,6 +2,7 @@ package com.kosign.bizaddress.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
+import com.kosign.bizaddress.login.LoginActivity;
 import com.kosign.bizaddress.main.address.AddressFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.main.group.GroupFragment;
@@ -21,6 +23,7 @@ import com.kosign.bizaddress.main.retrofit.DivisionThread;
 import com.kosign.bizaddress.main.retrofit.EmplThread;
 import com.kosign.bizaddress.main.retrofit.GroupThread;
 import com.kosign.bizaddress.model.UserInfo;
+import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.ViewPageAdapter;
 
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = "MainActivity";
     private Context mContext;
     private ImageView refresh;
+    private ImageView logout;
     private ViewPageAdapter adapter;
     private ViewPager viewPager;
     private AddressFragment addressFragment;
@@ -41,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private GroupFragment groupFragment;
     private ArrayList<UserInfo> userdata;
     private ProgressDialog dlgProgress;
+    private EmplPreference pref;
 
+    // TODO: 2016. 8. 10. 그룹 추가 하기
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
@@ -50,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         init();
         getEmplData();
         getDivisionData();
-        getGroupData();
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        getGroupData();
         setViewpager();
     }
 
@@ -58,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
         dlgProgress = ProgressDialog.show(MainActivity.this, null, "잠시만 기다려 주세요.");
         mContext = MainActivity.this;
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
+        logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
+        logout.setOnClickListener(logoutClickListener);
+        pref = GlobalApplication.getInstance().getPref();
     }
 
     /**
@@ -106,21 +116,25 @@ public class MainActivity extends AppCompatActivity {
     private void setViewpager(){
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
-        groupFragment = new GroupFragment();
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        groupFragment = new GroupFragment();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         List<Fragment> fragments = new ArrayList<Fragment>();
         fragments.add(addressFragment);
         fragments.add(divisionFragment);
-        fragments.add(groupFragment);
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        fragments.add(groupFragment);
         List<String> titles = new ArrayList<String>();
         titles.add("연락처");
         titles.add("부서");
-        titles.add("그룹");
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        titles.add("그룹");
 
         adapter = new ViewPageAdapter(getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(2); // 뷰 페이저 캐싱 페이지 개수
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        viewPager.setOffscreenPageLimit(2); // 뷰 페이저 캐싱 페이지 개수  그룹 추가 시 주석 해제하기
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -128,8 +142,18 @@ public class MainActivity extends AppCompatActivity {
     ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            getEmplData();
-            GlobalApplication.getInstance().setPage(1);
+            addressFragment.refreshing();
+        }
+    };
+
+    ImageView.OnClickListener logoutClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            pref.putString("LOGIN_YN", "N");
+            Intent Intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(Intent);
+            finish();
         }
     };
 
@@ -187,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void stopRefresh(){
         addressFragment.stopRefresh();
-        groupFragment.stopRefresh();
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        groupFragment.stopRefresh();
         divisionFragment.stopRefresh();
     }
 }

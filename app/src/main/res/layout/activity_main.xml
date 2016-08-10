@@ -17,6 +17,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
+        android:elevation="2dp"
         android:layout_below="@+id/BizTitleBar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
