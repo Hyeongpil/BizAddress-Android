@@ -8,8 +8,10 @@
         android:id="@+id/address_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="이름, 부서"
-        android:drawableStart="@drawable/mini_search"/>
+        android:hint=" 이름 검색"
+        android:drawableStart="@drawable/mini_search"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/address_refresh"

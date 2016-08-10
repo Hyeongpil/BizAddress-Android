@@ -178,9 +178,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 주소록 연동 실패
      */
-    public void dataException(){
+    public void stopDlgProgress(){
         dlgProgress.dismiss();
-
     }
 
     /**

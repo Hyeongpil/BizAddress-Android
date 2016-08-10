@@ -14,6 +14,7 @@ public class GlobalApplication extends Application {
     private EmplPreference pref;
     private HashMap<String,String> division_map = new HashMap<>(); // 부서 코드를 담고 있는 부서 해시맵 < 이름 , 부서코드 >
     private int page = 1; // addressfragment 페이지 수
+    private int emplThreadCount = 0;
 
     public static Activity getCurrentActivity() {
         return currentActivity;
@@ -58,4 +59,7 @@ public class GlobalApplication extends Application {
     public int getPage() {return page;}
     public void pageCountup() {this.page++;}
     public void setPage(int page) {this.page = page;}
+
+    public int getEmplThreadCount() {return emplThreadCount;}
+    public void setEmplThreadCount(int emplThreadCount) {this.emplThreadCount = emplThreadCount;}
 }

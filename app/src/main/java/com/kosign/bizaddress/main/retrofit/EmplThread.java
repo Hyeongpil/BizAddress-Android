@@ -36,6 +36,7 @@ public class EmplThread extends Thread {
     private Context mContext;
     private EmplRepo emplRepo;
     private Handler handler;
+    private int callCount = GlobalApplication.getInstance().getEmplThreadCount(); // 호출 순서를 알기 위해 글로벌 어플리케이션에서 가져옴
 
     private EmplPreference pref = GlobalApplication.getInstance().getPref();
     private JSONObject mApiTrnHead = new JSONObject();
@@ -50,13 +51,6 @@ public class EmplThread extends Thread {
 
     private ArrayList<UserInfo> userdata = new ArrayList<>();
 
-    //검색
-    public EmplThread(Handler handler, Context mContext, String search) {
-        this.mContext = mContext;
-        this.handler = handler;
-        this.search = search;
-    }
-
     //기본
     public EmplThread(Handler handler, Context mContext) {
         this.mContext = mContext;
@@ -70,6 +64,13 @@ public class EmplThread extends Thread {
         this.nPageNo = page;
     }
 
+    //검색
+    public EmplThread(Handler handler, Context mContext, String search) {
+        this.mContext = mContext;
+        this.handler = handler;
+        this.search = search;
+    }
+
     //그룹 검색
     public EmplThread(String grp_cd, Handler handler, Context mContext) {
         this.mContext = mContext;
@@ -80,7 +81,7 @@ public class EmplThread extends Thread {
     @Override
     public void run() {
         super.run();
-        String strApiTrnOutput = "";
+        GlobalApplication.getInstance().setEmplThreadCount(callCount+1);// 호출 될 때 마다 호출 카운트를 늘려준다
 
         try {
             // 필수
@@ -147,6 +148,7 @@ public class EmplThread extends Thread {
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("EmplThread", userdata);
+                        bundle.putInt("callCount",callCount);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{
@@ -160,8 +162,9 @@ public class EmplThread extends Thread {
             @Override
             public void onFailure(Call<EmplRepo> call, Throwable t) {
                 Log.e(TAG,"실패, 요청 메시지:"+call.request());
+                ((MainActivity)mContext).stopRefresh();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
-                ((MainActivity)mContext).dataException();
+                ((MainActivity)mContext).stopDlgProgress();
             }
         });
     }

@@ -36,7 +36,8 @@ public class AddressFragment extends Fragment {
     private EditText search_et;
     private int page;
     private TextWatcher textWatcher;
-    private boolean searching = false;
+    private boolean searching = false; // 검색 중 일땐 BottomRefreshListener 비 활성화
+    private int threadCount = 0;
 
     @Nullable
     @Override
@@ -66,14 +67,16 @@ public class AddressFragment extends Fragment {
     private void setSearch(){
         textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(search_et.isFocusable()){
                     searching = true;
-                    Handler EmplHandler = new SearchEmplReceiveHandler();
-                    Thread emplThread = new EmplThread(EmplHandler, getActivity(), search_et.getText().toString());
-                    emplThread.start();
+                    Handler searchHandler = new SearchEmplReceiveHandler();
+                    Thread searchThread = new EmplThread(searchHandler, getActivity(), search_et.getText().toString());
+                    searchThread.start();
                     Log.e(TAG,"search :"+search_et.getText().toString());
                 }
             }
@@ -81,6 +84,7 @@ public class AddressFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if(search_et.getText().toString().equals("")){
                     searching = false;
+                    GlobalApplication.getInstance().setEmplThreadCount(0);
                 }
             }
         };
@@ -103,14 +107,14 @@ public class AddressFragment extends Fragment {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
+            if(!searching){ // 검색중이 아닐 때
+                int LastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
 
-            int LastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 18) {
+                    GlobalApplication.getInstance().pageCountup(); // 글로벌 어플리케이션의 페이지 카운트를 올려줌
+                    page = GlobalApplication.getInstance().getPage(); // 페이지 값을 가져옴
+                    refreshLayout.setRefreshing(true);
 
-            if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 18) {
-                GlobalApplication.getInstance().pageCountup(); // 글로벌 어플리케이션의 페이지 카운트를 올려줌
-                page = GlobalApplication.getInstance().getPage(); // 페이지 값을 가져옴
-                refreshLayout.setRefreshing(true);
-                if(!searching){ // 검색중이 아닐 때
                     Handler handler = new BottomRefreshHandler();
                     Thread thread = new EmplThread(handler, getActivity(), page);
                     thread.start();
@@ -146,7 +150,8 @@ public class AddressFragment extends Fragment {
             searching = false;
             search_et.setText("");
             ((MainActivity)getActivity()).getEmplData();
-            GlobalApplication.getInstance().setPage(1);
+            GlobalApplication.getInstance().setPage(1); // 직원 목록 페이지 수 초기화
+            GlobalApplication.getInstance().setEmplThreadCount(0); // 검색 스레드 카운트 초기화
         }
     }
 
@@ -166,7 +171,11 @@ public class AddressFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ArrayList<UserInfo> temp = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
-            adapter.setData(temp);
+            Log.e(TAG,"count :"+msg.getData().getInt("callCount"));
+            if(threadCount < msg.getData().getInt("callCount")){ // 가장 나중에 실행된 스레드만 데이터 적용
+                threadCount = msg.getData().getInt("callCount");
+                adapter.setData(temp);
+            }
         }
     }
 
