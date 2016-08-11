@@ -47,15 +47,15 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public void onBindViewHolder(AddressViewHolder holder, final int position) {
         final UserInfo data = mListData.get(position);
 
+        //부서가 없으면 부서 미지정
+        String division = (data.getStrDivision() == null) ? "부서 미지정" : data.getStrDivision();
         //내선 번호가 있을 땐 부서 / 내선번호로 출력
-        String division = data.getStrDivision();
-        if(data.getStrInnerPhoneNum() != null){
+        if(!data.getStrInnerPhoneNum().equals("")){
             division = division+" /";
         }
-
         holder.getName().setText(data.getStrName());
         holder.getInner_phone().setText(data.getStrInnerPhoneNum());
-        holder.getDivision().setText(data.getStrDivision());
+        holder.getDivision().setText(division);
 
         //네비게이션 프로필
         Glide.with(mContext)

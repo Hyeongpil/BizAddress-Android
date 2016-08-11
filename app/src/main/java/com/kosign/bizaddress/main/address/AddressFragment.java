@@ -195,7 +195,7 @@ public class AddressFragment extends Fragment {
 
                 if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 18) {
                     mListDataCount += 20; // 바닥에 닿으면 카운트 20씩 증가
-                    Log.e(TAG,"BottomRefreshListener count :"+mListDataCount);
+                    Log.d(TAG,"BottomRefreshListener mListDataCount :"+mListDataCount);
                     copyListData();
                 }
             }
