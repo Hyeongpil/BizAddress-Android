@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * Created by Hyeongpil on 2016. 8. 4..
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     final static String TAG = "MainActivity";
     private Context mContext;
     private ImageView refresh;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ViewPageAdapter(getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(adapter);
+        viewPager.setOnPageChangeListener(new ViewPagerScrolledListener());
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        viewPager.setOffscreenPageLimit(2); // 뷰 페이저 캐싱 페이지 개수  그룹 추가 시 주석 해제하기
         tabLayout.setupWithViewPager(viewPager);
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
             dlgProgress.dismiss();
             addressFragment.setData(userdata);
+            GlobalApplication.getInstance().setInitialData(userdata); // 글로벌 어플리케이션에 초기값 저장
             stopRefresh();
         }
     }
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 주소록 연동 실패
+     * 주소록 연동 실패시 다이얼로그 멈춤
      */
     public void stopDlgProgress(){
         dlgProgress.dismiss();
@@ -214,5 +217,21 @@ public class MainActivity extends AppCompatActivity {
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment.stopRefresh();
         divisionFragment.stopRefresh();
+    }
+
+    public class ViewPagerScrolledListener implements ViewPager.OnPageChangeListener{
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+        @Override
+        public void onPageSelected(int position) {
+            if(position == 1){ // 부서로 스크롤 시 키보드 내리고 검색 초기화
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(addressFragment.getSearch_et().getWindowToken(), 0);
+                addressFragment.getSearch_et().clearFocus();
+                addressFragment.getSearch_et().setText("");
+            }
+        }
+        @Override
+        public void onPageScrollStateChanged(int state) {}
     }
 }

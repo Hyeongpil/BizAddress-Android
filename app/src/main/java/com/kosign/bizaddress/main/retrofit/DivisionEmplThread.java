@@ -32,7 +32,7 @@ import retrofit2.Retrofit;
  */
 
 public class DivisionEmplThread extends Thread {
-    final static String TAG = "EmplThread";
+    final static String TAG = "DivisionEmplThread";
     private Context mContext;
     DivisionEmplRepo divisionEmplRepo;
     private Handler handler;

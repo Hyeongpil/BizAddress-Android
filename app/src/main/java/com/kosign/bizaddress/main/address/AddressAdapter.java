@@ -61,6 +61,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         Glide.with(mContext)
                 .load(data.getStrProfileImg())
                 .error(R.drawable.default_profile)
+                .thumbnail(0.1f)
                 .bitmapTransform(new CropCircleTransformation(Glide.get(mContext).getBitmapPool())).into(holder.getProfileImg());
 
         //전화 걸기 버튼

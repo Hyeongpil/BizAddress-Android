@@ -72,6 +72,7 @@ public class DetailActivity extends Activity{
         Glide.with(mContext)
                 .load(data.getStrProfileImg())
                 .error(R.drawable.default_profile)
+                .thumbnail(0.1f)
                 .bitmapTransform(new CropCircleTransformation(Glide.get(mContext).getBitmapPool())).into(profileImg);
         sms.setOnClickListener(new OnClickListener());
         call.setOnClickListener(new OnClickListener());

@@ -36,15 +36,13 @@ public class EmplThread extends Thread {
     private Context mContext;
     private EmplRepo emplRepo;
     private Handler handler;
-    private int callCount = GlobalApplication.getInstance().getEmplThreadCount(); // 호출 순서를 알기 위해 글로벌 어플리케이션에서 가져옴
 
     private EmplPreference pref = GlobalApplication.getInstance().getPref();
     private JSONObject mApiTrnHead = new JSONObject();
     private JSONObject mApiTrnReqData = new JSONObject();
 
     private int nPageNo = 1; // 페이지 번호
-    private int nPagePerCnt = 20; // 페이지당 갯수
-    private int nTOTL_PAGE_NCNT = 0; // 총 조회 페이지
+    private int nPagePerCnt = 1000; // 페이지당 갯수
     private String search = "";
     private String grp_cd = "";
     private String dvsn_cd = "";
@@ -57,20 +55,6 @@ public class EmplThread extends Thread {
         this.handler = handler;
     }
 
-    //페이지
-    public EmplThread(Handler handler, Context mContext, int page) {
-        this.mContext = mContext;
-        this.handler = handler;
-        this.nPageNo = page;
-    }
-
-    //검색
-    public EmplThread(Handler handler, Context mContext, String search) {
-        this.mContext = mContext;
-        this.handler = handler;
-        this.search = search;
-    }
-
     //그룹 검색
     public EmplThread(String grp_cd, Handler handler, Context mContext) {
         this.mContext = mContext;
@@ -81,7 +65,6 @@ public class EmplThread extends Thread {
     @Override
     public void run() {
         super.run();
-        GlobalApplication.getInstance().setEmplThreadCount(callCount+1);// 호출 될 때 마다 호출 카운트를 늘려준다
 
         try {
             // 필수
@@ -126,6 +109,7 @@ public class EmplThread extends Thread {
             @Override
             public void onResponse(Call<EmplRepo> call, Response<EmplRepo> response) {
                 if(response.isSuccessful()){
+                    Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
                     if(emplRepo.getRSLT_CD().equals("0000")) { // 응답 정상 처리
                         int count = emplRepo.getResp_data().get(0).getREC().size();
@@ -147,7 +131,6 @@ public class EmplThread extends Thread {
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("EmplThread", userdata);
-                        bundle.putInt("callCount",callCount);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{
@@ -160,7 +143,7 @@ public class EmplThread extends Thread {
 
             @Override
             public void onFailure(Call<EmplRepo> call, Throwable t) {
-                Log.e(TAG,"실패, 요청 메시지:"+call.request());
+                Log.e(TAG,"onFailure ,request:"+call.request());
                 ((MainActivity)mContext).stopRefresh();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
                 ((MainActivity)mContext).stopDlgProgress();
