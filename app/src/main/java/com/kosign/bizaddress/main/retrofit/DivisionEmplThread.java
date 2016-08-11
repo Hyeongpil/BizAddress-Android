@@ -125,6 +125,7 @@ public class DivisionEmplThread extends Thread {
             public void onFailure(Call<DivisionEmplRepo> call, Throwable t) {
                 Log.e(TAG,"실패 :"+call.request());
                 ((MainActivity)mContext).stopRefresh();
+                ((MainActivity)mContext).stopDlgProgress();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });

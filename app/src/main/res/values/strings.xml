@@ -5,4 +5,17 @@
     <string name="login_pwd_hint">비밀번호</string>
     <string name="login_login">로그인</string>
     <string name="login_auto">자동 로그인</string>
+
+    <string name="development_server_url">http://emplinfo.wecambodia.com</string>
+    <string name="development_api_key">de51933d-e5b7-f464-95f0-a414e162c1e1</string>
+    <string name="development_ptl_id">PTL_51</string>
+
+    <string name="server_url">https://emplinfo.appplay.co.kr</string>
+    <string name="api_key">0d931cf9-0d22-6ff6-a9df-55b623537f59</string>
+    <string name="ptl_id">PTL_3</string>
+
+    <string name="mEmplInfoSchUserApiId">emplinfo05</string>
+    <string name="mEmplInfoMyGrpApiId">emplinfo09</string>
+    <string name="mEmplInfoDvsnListApiId">emplinfo21</string>
+    <string name="mDvsnEmplListApiId">emplinfo25</string>
 </resources>

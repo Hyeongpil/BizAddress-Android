@@ -21,7 +21,6 @@ public class DivisionEmplRepo implements Serializable{
 
     public class RESP_DATA {
         @SerializedName("REC") ArrayList<REC> REC;
-//        @SerializedName("INQ_TOTL_NCNT") String INQ_TOTL_NCNT; // 총 조회 건수
 
         public class REC {
             @SerializedName("USER_NM") String name; // 이름
@@ -40,7 +39,6 @@ public class DivisionEmplRepo implements Serializable{
         }
         public ArrayList<DivisionEmplRepo.RESP_DATA.REC> getREC() {return REC;}
 
-//        public String getINQ_TOTL_NCNT() {return INQ_TOTL_NCNT;}
     }
 
     public ArrayList<DivisionEmplRepo.RESP_DATA> getRESP_DATA() {return RESP_DATA;}

@@ -41,7 +41,7 @@ public class AddressFragment extends Fragment {
     private EditText search_et;
     private TextWatcher textWatcher;
     private boolean searching = false; // 검색 중 일땐 BottomRefreshListener 비 활성화
-    private int mListDataCount = 20; // 초기값 20   바닥에 닿을 때 마다 +20씩 증가
+    private int mListDataCount; // 바닥에 닿을 때 마다 +20씩 증가
 
     @Nullable
     @Override
@@ -128,9 +128,10 @@ public class AddressFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //검색어가 없으면 초기 데이터를 보여준다
-                if(search_et.getText().toString().equals("")){
+                if(search_et.isFocusable() && search_et.getText().toString().equals("")){
                     searching = false;
-                    setAdapterData(GlobalApplication.getInstance().getInitialData());
+                    initialData = GlobalApplication.getInstance().getInitialData();
+                    copyListData();
                 }
             }
         };
@@ -143,6 +144,7 @@ public class AddressFragment extends Fragment {
      * initialData에 넣는다
      */
     public void setData(ArrayList<UserInfo> initialData){
+        Log.e(TAG,"setdata 호출");
         mListData = new ArrayList<>(); // mListData 초기화
         mListDataCount = 20; // 카운트 초기화
         this.initialData = initialData;
@@ -191,8 +193,9 @@ public class AddressFragment extends Fragment {
             if(!searching){ // 검색중이 아닐 때
                 int LastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
 
-                if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 19) {
+                if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 18) {
                     mListDataCount += 20; // 바닥에 닿으면 카운트 20씩 증가
+                    Log.e(TAG,"BottomRefreshListener count :"+mListDataCount);
                     copyListData();
                 }
             }
@@ -205,11 +208,16 @@ public class AddressFragment extends Fragment {
     private class AddressClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            final int position = add_recycler.getChildLayoutPosition(view);
-            UserInfo temp = mListData.get(position);
-            Intent intent = new Intent(getActivity(), DetailActivity.class);
-            intent.putExtra("data",temp);
-            startActivity(intent);
+            try {
+                final int position = add_recycler.getChildLayoutPosition(view);
+                UserInfo temp = mListData.get(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("data", temp);
+                startActivity(intent);
+            }catch (IndexOutOfBoundsException e){
+                Snackbar.make(mCoordinatorLayout,"오류가 발생했습니다. 새로고침 해 주세요",Snackbar.LENGTH_SHORT).show();
+                Log.e(TAG,"addressClickError :"+e.getMessage());
+            }
         }
     }
 

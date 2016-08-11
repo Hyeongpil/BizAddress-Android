@@ -18,7 +18,6 @@ import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
-import com.kosign.bizaddress.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +59,7 @@ public class LoginActivity extends AppCompatActivity{
         btn_login.setOnClickListener(mClickListener);
         pref= GlobalApplication.getInstance().getPref();
         loginYN = pref.getString("LOGIN_YN", "N");
+        et_id.setText(pref.getString("USER_ID"));
         et_pwd.setText("");
     }
 
@@ -187,25 +187,5 @@ public class LoginActivity extends AppCompatActivity{
             }
         }
     }
-
-    protected void onActivityResult(int requestCode , int resultCode , Intent intent){
-
-        String strLogyn = pref.getString("LOGIN_YN", "N");
-
-        et_pwd.setText("");
-
-        et_id.setText(StringUtil.nvl(pref.getString("USER_ID")));
-
-        if(StringUtil.nvl(pref.getString("USER_ID")).length()>0){
-            et_pwd.requestFocus();
-        }
-
-        if("Y".equals(strLogyn)){
-            chkBox_auto.setChecked(true);
-        }else {
-            chkBox_auto.setChecked(false);
-        }
-    }
-
 
 }

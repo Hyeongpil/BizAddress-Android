@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Log.e(TAG,"호출");
             try {userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
             dlgProgress.dismiss();
@@ -187,6 +188,7 @@ public class MainActivity extends AppCompatActivity{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             stopRefresh();
+            dlgProgress.dismiss();
             divisionFragment.setData(msg.getData());
         }
     }

@@ -1,12 +1,17 @@
 package com.kosign.bizaddress.api;
 
+import android.content.res.Resources;
+
+import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.util.ComResource;
+import com.kosign.bizaddress.util.GlobalApplication;
 
 /**
  * Created by jung on 2016-02-27.
  */
 public class EmplApi {
     private static EmplApi ourInstance = new EmplApi();
+    private static Resources resources = GlobalApplication.getInstance().getResources();
 
     public static final String mEmplInfoUrl;
     public static final String mEmplInfoApiKey;
@@ -21,18 +26,18 @@ public class EmplApi {
         //개발
         if(ComResource.mDevMode==1){
 //            mEmplInfoUrl = "http://emplinfo.webcash.co.kr"; // 한국 개발 서버
-            mEmplInfoUrl = "http://emplinfo.wecambodia.com";// 캄보디아 개발 서버
-            mEmplInfoApiKey = "de51933d-e5b7-f464-95f0-a414e162c1e1";
-            mPtlId = "PTL_51";
+            mEmplInfoUrl = resources.getString(R.string.development_server_url);// 캄보디아 개발 서버
+            mEmplInfoApiKey = resources.getString(R.string.development_api_key);
+            mPtlId = resources.getString(R.string.development_ptl_id);
         }else{
-            mEmplInfoUrl = "https://emplinfo.appplay.co.kr";
-            mEmplInfoApiKey = "0d931cf9-0d22-6ff6-a9df-55b623537f59";
-            mPtlId = "PTL_3";
+            mEmplInfoUrl = resources.getString(R.string.server_url);
+            mEmplInfoApiKey = resources.getString(R.string.api_key);
+            mPtlId = resources.getString(R.string.ptl_id);
         }
-        mEmplInfoSchUserApiId = "emplinfo05";
-        mEmplInfoMyGrpApiId = "emplinfo09";
-        mEmplInfoDvsnListApiId = "emplinfo21";
-        mDvsnEmplListApiId = "emplinfo25";
+        mEmplInfoSchUserApiId = resources.getString(R.string.mEmplInfoSchUserApiId);
+        mEmplInfoMyGrpApiId = resources.getString(R.string.mEmplInfoMyGrpApiId);
+        mEmplInfoDvsnListApiId = resources.getString(R.string.mEmplInfoDvsnListApiId);
+        mDvsnEmplListApiId = resources.getString(R.string.mDvsnEmplListApiId);
     }
 
     public static EmplApi getInstance() {
