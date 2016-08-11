@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.login.LoginActivity;
@@ -36,7 +37,8 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity{
     final static String TAG = "MainActivity";
-    private Context mContext;
+    private final long	FINSH_INTERVAL_TIME    = 2000;
+    private long		backPressedTime        = 0;
     private ImageView refresh;
     private ImageView logout;
     private ViewPageAdapter adapter;
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity{
 
     private void init(){
         dlgProgress = ProgressDialog.show(MainActivity.this, null, "잠시만 기다려 주세요.");
-        mContext = MainActivity.this;
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity{
     ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
+            dlgProgress.show();
             addressFragment.refreshing();
         }
     };
@@ -233,5 +235,21 @@ public class MainActivity extends AppCompatActivity{
         }
         @Override
         public void onPageScrollStateChanged(int state) {}
+    }
+
+    @Override
+    public void onBackPressed() {
+        long tempTime        = System.currentTimeMillis();
+        long intervalTime    = tempTime - backPressedTime;
+
+        if ( 0 <= intervalTime && FINSH_INTERVAL_TIME >= intervalTime ) {
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+        else {
+            backPressedTime = tempTime;
+            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한번더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+        }
     }
 }

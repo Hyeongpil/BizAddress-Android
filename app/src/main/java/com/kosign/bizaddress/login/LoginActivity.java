@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity{
         btn_login.setOnClickListener(mClickListener);
         pref= GlobalApplication.getInstance().getPref();
         loginYN = pref.getString("LOGIN_YN", "N");
-//        et_pwd.setText("");
+        et_pwd.setText("");
     }
 
     Button.OnClickListener mClickListener = new View.OnClickListener() {
