@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity{
             }
 
             if(dlgProgress==null)
-                dlgProgress = ProgressDialog.show(LoginActivity.this, null, "잠시만 기다려 주세요.");
+                dlgProgress = ProgressDialog.show(LoginActivity.this, null, "로그인 중입니다.\n잠시만 기다려 주세요.");
 
             new ProcessBizplayLoginTask().execute(strUserId, strPassword, null);
         }

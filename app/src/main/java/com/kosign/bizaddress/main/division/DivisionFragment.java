@@ -25,7 +25,7 @@ public class DivisionFragment extends Fragment{
     private SwipeRefreshLayout refreshLayout;
     public DivisionAdapter adapter;
     private RecyclerView divi_recycler;
-    private ArrayList<HighDivision> highDivision;
+    private ArrayList<HighDivision> divisionList;
 
     @Nullable
     @Override
@@ -43,20 +43,20 @@ public class DivisionFragment extends Fragment{
         refreshLayout.setOnRefreshListener(new RefreshListener());
     }
 
-    public void setData (Bundle bundle){
-        this.highDivision = (ArrayList<HighDivision>) bundle.getSerializable("highDivision");
+    public void setData (ArrayList<HighDivision> divisionList){
+        this.divisionList = divisionList;
         setAdapter();
 //        데이터 보는 로그
-//        for(int i= 0 ; i<highDivision.size(); i++){
-//            Log.e(TAG,"high :"+highDivision.get(i).getHighDivision_name());
-//            for(int j = 0; j< highDivision.get(i).getDivision().size(); j++){
-//                Log.e(TAG,"division :"+highDivision.get(i).getDivision().get(j).getDivision_name());
+//        for(int i= 0 ; i<divisionList.size(); i++){
+//            Log.e(TAG,"high :"+divisionList.get(i).getHighDivision_name());
+//            for(int j = 0; j< divisionList.get(i).getDivision().size(); j++){
+//                Log.e(TAG,"division :"+divisionList.get(i).getDivision().get(j).getDivision_name());
 //            }
 //        }
     }
 
     private void setAdapter(){
-        adapter = new DivisionAdapter(getActivity(),highDivision);
+        adapter = new DivisionAdapter(getActivity(), divisionList);
 
         adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override

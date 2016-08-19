@@ -36,7 +36,7 @@ public class DetailActivity extends Activity{
     private ImageView call;
     private UserInfo data;
     private ClipboardManager clipboardManager;
-
+    private String phone;
 
 
     @Override
@@ -61,11 +61,20 @@ public class DetailActivity extends Activity{
         call = (ImageView) findViewById(R.id.detail_call);
         data = (UserInfo) getIntent().getSerializableExtra("data");
         clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        //핸드폰 번호가 9자리보다 작으면 앞에 캄보디아 국가코드 855를 붙여줌
+        phone = data.getStrPhoneNum();
+        if(phone.length() < 9){
+            phone = "855"+phone;
+        }
     }
 
     private void setData(){
         name.setText(data.getStrName());
-        phonenum.setText(data.getStrPhoneNum());
+        String tempPhone = data.getStrPhoneNum();
+        if(tempPhone.length() < 9){
+            tempPhone = "(855)" + tempPhone;
+        }
+        phonenum.setText(tempPhone);
         division.setText(data.getStrDivision());
         email.setText(data.getStrEmail());
         //프로필 사진
@@ -82,36 +91,36 @@ public class DetailActivity extends Activity{
     }
 
     private class OnClickListener implements View.OnClickListener{
+
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-
                 case R.id.detail_email:
                     clipboardManager.setText(email.getText());
                     Toast.makeText(DetailActivity.this, "e-mail이 클립 보드에 복사 되었습니다.", Toast.LENGTH_SHORT).show();
                     break;
 
                 case R.id.detail_phonenum:
-                    clipboardManager.setText(data.getStrPhoneNum());
+                    clipboardManager.setText(phone);
                     Toast.makeText(DetailActivity.this, "번호가 클립 보드에 복사 되었습니다.", Toast.LENGTH_SHORT).show();
                     break;
 
                 case R.id.detail_add:
                     Intent add_intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
                     Bundle bundle = new Bundle();
-                    bundle.putString(ContactsContract.Intents.Insert.PHONE, data.getStrPhoneNum());
+                    bundle.putString(ContactsContract.Intents.Insert.PHONE, phone);
                     add_intent.putExtras(bundle);
                     startActivity(add_intent);
                     break;
 
                 case R.id.detail_sms:
-                    Uri uri= Uri.parse("smsto:"+data.getStrPhoneNum()); //sms 문자와 관련된 Data는 'smsto:'로 시작. 이후는 문자를 받는 사람의 전화번호
+                    Uri uri= Uri.parse("smsto:"+phone); //sms 문자와 관련된 Data는 'smsto:'로 시작. 이후는 문자를 받는 사람의 전화번호
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO,uri);
                     startActivity(sms_intent);
                     break;
 
                 case R.id.detail_call:
-                    mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+data.getStrPhoneNum())));
+                    mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
                     break;
             }
         }

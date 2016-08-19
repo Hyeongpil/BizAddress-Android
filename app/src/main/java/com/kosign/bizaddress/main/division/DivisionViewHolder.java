@@ -49,7 +49,7 @@ public class DivisionViewHolder extends ChildViewHolder {
                 Log.d(TAG,"name :"+division_name.getText());
                 Log.d(TAG,"code :"+division_code);
 
-                dlgProgress = ProgressDialog.show(mContext, null, "잠시만 기다려 주세요.");
+                dlgProgress = ProgressDialog.show(mContext, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
                 Handler divisionEmplHandler = new DivisionEmplReceiveHandler();
                 Thread divisionEmplThread = new DivisionEmplThread(divisionEmplHandler, mContext, division_code);
                 divisionEmplThread.start();

@@ -144,11 +144,12 @@ public class AddressFragment extends Fragment {
      * initialData에 넣는다
      */
     public void setData(ArrayList<UserInfo> initialData){
-        Log.e(TAG,"setdata 호출");
         mListData = new ArrayList<>(); // mListData 초기화
         mListDataCount = 20; // 카운트 초기화
         this.initialData = initialData;
-        refreshLayout.setRefreshing(false);
+        if(refreshLayout.isRefreshing()){
+            refreshLayout.setRefreshing(false);
+        }
         copyListData();
     }
 
@@ -167,6 +168,8 @@ public class AddressFragment extends Fragment {
             }
         }catch (IndexOutOfBoundsException e){
             Log.d(TAG,"copyListData error :"+e.getMessage());
+        }catch (NullPointerException e){
+            Log.e(TAG,""+e.getMessage());
         }
         finally {
             setAdapterData(mListData);

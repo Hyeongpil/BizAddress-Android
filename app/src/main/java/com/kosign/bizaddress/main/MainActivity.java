@@ -24,6 +24,7 @@ import com.kosign.bizaddress.main.group.GroupFragment;
 import com.kosign.bizaddress.main.retrofit.DivisionThread;
 import com.kosign.bizaddress.main.retrofit.EmplThread;
 import com.kosign.bizaddress.main.retrofit.GroupThread;
+import com.kosign.bizaddress.model.HighDivision;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
@@ -46,9 +47,11 @@ public class MainActivity extends AppCompatActivity{
     private AddressFragment addressFragment;
     private DivisionFragment divisionFragment;
     private GroupFragment groupFragment;
-    private ArrayList<UserInfo> userdata;
+    private ArrayList<UserInfo> emplList = new ArrayList<>();
+    private ArrayList<HighDivision> divisionList = new ArrayList<>();
     private ProgressDialog dlgProgress;
     private EmplPreference pref;
+    private com.kosign.bizaddress.model.BizTitleBar title;
 
     // TODO: 2016. 8. 10. 그룹 추가 하기
     @Override
@@ -57,20 +60,54 @@ public class MainActivity extends AppCompatActivity{
         setContentView (R.layout.activity_main);
 
         init();
-        getEmplData();
-        getDivisionData();
+        checkEmplData();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        getGroupData();
         setViewpager();
     }
 
     private void init(){
-        dlgProgress = ProgressDialog.show(MainActivity.this, null, "잠시만 기다려 주세요.");
+        addressFragment = new AddressFragment();
+        divisionFragment = new DivisionFragment();
+        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
+//        groupFragment = new GroupFragment();
+        dlgProgress = ProgressDialog.show(MainActivity.this, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
         logout.setOnClickListener(logoutClickListener);
         pref = GlobalApplication.getInstance().getPref();
+        //타이틀 세팅
+        title = (com.kosign.bizaddress.model.BizTitleBar)findViewById(R.id.BizTitleBar);
+        title.setTitle(pref.getString("BSNN_NM"));
+    }
+
+    /**
+     * pref에서 직원 데이터를 확인하고 바로 가져옴
+     */
+    private void checkEmplData(){
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                emplList = pref.getEmplList();
+                divisionList = pref.getDivisionList();
+                //직원 데이터
+                if (emplList == null) {
+                    getEmplData();
+                }else {
+                    //타이틀 회사 이름으로
+                    GlobalApplication.getInstance().setInitialData(emplList); // 글로벌 어플리케이션에 초기값 저장
+                    dlgProgress.dismiss();
+                    addressFragment.setData(emplList);
+                }
+                //부서 데이터
+                if(divisionList == null){
+                    getDivisionData();
+                }else{
+                    divisionFragment.setData(divisionList);
+                }
+            }
+        });
     }
 
     /**
@@ -113,13 +150,7 @@ public class MainActivity extends AppCompatActivity{
         viewPager.setCurrentItem(0);
     }
 
-
-
     private void setViewpager(){
-        addressFragment = new AddressFragment();
-        divisionFragment = new DivisionFragment();
-        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
-//        groupFragment = new GroupFragment();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         List<Fragment> fragments = new ArrayList<Fragment>();
@@ -128,7 +159,7 @@ public class MainActivity extends AppCompatActivity{
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        fragments.add(groupFragment);
         List<String> titles = new ArrayList<String>();
-        titles.add("연락처");
+        titles.add("직원");
         titles.add("부서");
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        titles.add("그룹");
@@ -146,6 +177,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onClick(View view) {
             dlgProgress.show();
+            getDivisionData();
             addressFragment.refreshing();
         }
     };
@@ -169,12 +201,14 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.e(TAG,"호출");
-            try {userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
+            try {
+                emplList = (ArrayList<UserInfo>) msg.getData().getSerializable("EmplThread");
+                //직원 데이터 pref 저장
+                pref.putEmplList(emplList); // pref에 저장
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
             dlgProgress.dismiss();
-            addressFragment.setData(userdata);
-            GlobalApplication.getInstance().setInitialData(userdata); // 글로벌 어플리케이션에 초기값 저장
+            addressFragment.setData(emplList);
+            GlobalApplication.getInstance().setInitialData(emplList); // 글로벌 어플리케이션에 초기값 저장
             stopRefresh();
         }
     }
@@ -187,9 +221,11 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            divisionList = (ArrayList<HighDivision>) msg.getData().getSerializable("divisionList");
+            pref.putDivisionList(divisionList);
             stopRefresh();
             dlgProgress.dismiss();
-            divisionFragment.setData(msg.getData());
+            divisionFragment.setData(divisionList);
         }
     }
 

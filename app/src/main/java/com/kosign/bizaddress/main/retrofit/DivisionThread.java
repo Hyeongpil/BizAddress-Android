@@ -44,9 +44,8 @@ public class DivisionThread extends Thread {
     private JSONObject mApiTrnReqData = new JSONObject();
 
     private String company;
-    private ArrayList<HighDivision> highDivision;
+    private ArrayList<HighDivision> divisionList;
     private HashMap<String, String> division_map;
-    private HashMap<String, String> high_division_map;
 
     //기본
     public DivisionThread(Handler handler, Context mContext) {
@@ -89,7 +88,7 @@ public class DivisionThread extends Thread {
                     Log.d(TAG,"response raw :"+response.raw());
                     divisionRepo = response.body();
                     if(divisionRepo.getRSLT_CD().equals("0000")){
-                        highDivision = new ArrayList<>();
+                        divisionList = new ArrayList<>();
                         int highDivision_count = -1; // 데이터 값이 순서대로 들어오므로 상위 부서의 카운트를 추가한다
                         int division_count = -1;
                         for(int i = 0; i < divisionRepo.getRESP_DATA().get(0).getREC().size() ; i++){
@@ -97,27 +96,26 @@ public class DivisionThread extends Thread {
                             //회사 이름
                             if(rec.get(i).getHigh_division() == null){
                                 company = rec.get(i).getDivision();
-                                highDivision.add(new HighDivision(rec.get(i).getDivision()));
+                                divisionList.add(new HighDivision(rec.get(i).getDivision()));
                                 division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
                                 highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
-                                continue;
                             }
                             //상위 부서
                             else if(rec.get(i).getHigh_division().equals(company)){
-                                highDivision.add(new HighDivision(rec.get(i).getDivision()));
+                                divisionList.add(new HighDivision(rec.get(i).getDivision()));
                                 division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
                                 highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
                                 division_count = -1; // 상위 부서가 새로 만들어졌으므로 중간 부서 카운트 초기화
                             }//중간 부서
-                            else if(highDivision.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())){
-                                highDivision.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(),rec.get(i).getDivision_cd()));
+                            else if(divisionList.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())){
+                                divisionList.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(),rec.get(i).getDivision_cd()));
                                 division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
                                 division_count++;
                             }else{//하위 부서도 중간부서에 포함
-                                for(int j = 0; j < highDivision.get(highDivision_count).getDivision().size(); j++){
-                                    if(highDivision.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())){
+                                for(int j = 0; j < divisionList.get(highDivision_count).getDivision().size(); j++){
+                                    if(divisionList.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())){
                                         String temp = "   ㄴ "+rec.get(i).getDivision(); // 하위 부서는 앞에 공백을 추가
-                                        highDivision.get(highDivision_count).getDivision().add(new Division(temp,rec.get(i).getDivision_cd()));
+                                        divisionList.get(highDivision_count).getDivision().add(new Division(temp,rec.get(i).getDivision_cd()));
                                         division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd());
                                         division_count++;
                                         break;
@@ -128,7 +126,7 @@ public class DivisionThread extends Thread {
                         //메인의 DivisionDataReceiveHandler 로 보내줌
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("highDivision", highDivision);
+                        bundle.putSerializable("divisionList", divisionList);
                         bundle.putString("company", company);
                         msg.setData(bundle);
                         handler.sendMessage(msg);

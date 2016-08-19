@@ -65,6 +65,7 @@ public class HttpUtil {
             postReq.write(strParam);
             postReq.flush();
 
+
             // JSONObject 수신
             if(strOutPutStreamCharSet.length()>0) {
                 postRes = new BufferedReader(new InputStreamReader(con.getInputStream(), strOutPutStreamCharSet));

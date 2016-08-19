@@ -47,7 +47,7 @@ public class EmplThread extends Thread {
     private String grp_cd = "";
     private String dvsn_cd = "";
 
-    private ArrayList<UserInfo> userdata = new ArrayList<>();
+    private ArrayList<UserInfo> emplList = new ArrayList<>();
 
     //기본
     public EmplThread(Handler handler, Context mContext) {
@@ -109,6 +109,7 @@ public class EmplThread extends Thread {
             @Override
             public void onResponse(Call<EmplRepo> call, Response<EmplRepo> response) {
                 if(response.isSuccessful()){
+                    Log.d(TAG,"request :"+call.request());
                     Log.d(TAG,"response raw :"+response.raw());
                     emplRepo = response.body();
                     if(emplRepo.getRSLT_CD().equals("0000")) { // 응답 정상 처리
@@ -125,12 +126,12 @@ public class EmplThread extends Thread {
                             temp.setStrPosition(rec.get(i).getPosition());
                             temp.setStrProfileImg(rec.get(i).getProfileImg());
                             temp.setStrInnerPhoneNum(rec.get(i).getInnerPhoneNum());
-                            userdata.add(temp);
+                            emplList.add(temp);
                         }
                         //메인의 EmplDataReceiveHandler 로 보내줌
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("EmplThread", userdata);
+                        bundle.putSerializable("EmplThread", emplList);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{

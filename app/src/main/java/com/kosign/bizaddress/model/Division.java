@@ -1,7 +1,7 @@
 package com.kosign.bizaddress.model;
 
 /**
- * Created by hp on 2016. 8. 5..
+ * Created by Hyeongpil on 2016. 8. 5..
  */
 public class Division {
     String division_name;

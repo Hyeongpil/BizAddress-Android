@@ -65,7 +65,8 @@ public class GroupFragment extends Fragment {
     private class GroupClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            dlgProgress = ProgressDialog.show(getActivity(), null, "잠시만 기다려 주세요.");
+            dlgProgress = ProgressDialog.show(getActivity(), null, "데이터를 불러오는 중입니다.\n" +
+                    "잠시만 기다려 주세요.");
             Handler groupHandler = new GroupReceiveHandler();
             Thread groupEmplThread = new EmplThread("그룹코드", groupHandler, getActivity());
             groupEmplThread.start();

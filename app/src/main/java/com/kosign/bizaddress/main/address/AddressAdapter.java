@@ -49,13 +49,15 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
         //부서가 없으면 부서 미지정
         String division = (data.getStrDivision() == null) ? "부서 미지정" : data.getStrDivision();
+        String phone = data.getStrPhoneNum();
         //내선 번호가 있을 땐 부서 / 내선번호로 출력
-        if(!data.getStrInnerPhoneNum().equals("")){
-            division = division+" /";
-        }
+        try{if(!data.getStrInnerPhoneNum().equals("")){
+            phone = phone+" / ";
+        }}catch (NullPointerException e){}
         holder.getName().setText(data.getStrName());
         holder.getInner_phone().setText(data.getStrInnerPhoneNum());
         holder.getDivision().setText(division);
+        holder.getPhone().setText(phone);
 
         //네비게이션 프로필
         Glide.with(mContext)
@@ -68,8 +70,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         holder.getCall().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //번호가 9자리보다 작으면 캄보디아 국가코드 855를 붙여줌
+                String phone = data.getStrPhoneNum();
+                if(phone.length() < 9){
+                    phone = "855"+phone;
+                }
                 //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
-                mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+data.getStrPhoneNum())));
+                mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
                 Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -101,12 +108,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public class AddressViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView division;
+        public TextView phone;
         public TextView inner_phone;
         public ImageView profileImg;
         public FrameLayout call;
         public AddressViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.address_name);
+            phone = (TextView) itemView.findViewById(R.id.address_phone);
             inner_phone = (TextView) itemView.findViewById(R.id.address_inner_phone);
             division = (TextView) itemView.findViewById(R.id.address_division);
             profileImg = (ImageView) itemView.findViewById(R.id.address_img);
@@ -114,6 +123,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         }
 
         public TextView getName() {return name;}
+        public TextView getPhone() {return phone;}
         public TextView getInner_phone() {return inner_phone;}
         public TextView getDivision() {return division;}
         public ImageView getProfileImg() {return profileImg;}

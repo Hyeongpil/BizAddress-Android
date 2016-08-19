@@ -1,5 +1,7 @@
 package com.kosign.bizaddress.api;
 
+import android.util.Log;
+
 import com.kosign.bizaddress.util.ComResource;
 import com.kosign.bizaddress.util.HttpUtil;
 import com.kosign.bizaddress.util.StringUtil;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -65,6 +68,7 @@ public class BizplayApi {
 
             HttpUtil hutil = new HttpUtil();
 
+            Log.e("bizplay","bizplayapi :"+URLEncoder.encode(mApiTrnHead.toString(),"UTF-8"));
             String strEnodeParam = "JSONData="+java.net.URLEncoder.encode(mApiTrnHead.toString()  ,"UTF-8");
 
             strApiTrnOutput = URLDecoder.decode(hutil.send(apiUrl, strEnodeParam, "POST", "utf-8", "utf-8", "5000", null), "UTF-8");

@@ -141,7 +141,7 @@
         <RelativeLayout
             android:id="@+id/rl_title_4"
             android:layout_width="match_parent"
-            android:layout_height="50dip"
+            android:layout_height="50dp"
             android:background="@color/common_titlebar"
             android:visibility="gone">
 
