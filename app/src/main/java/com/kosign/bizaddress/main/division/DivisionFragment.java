@@ -14,6 +14,7 @@ import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.HighDivision;
+import com.kosign.bizaddress.util.GlobalApplication;
 
 import java.util.ArrayList;
 
@@ -81,6 +82,7 @@ public class DivisionFragment extends Fragment{
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
+            GlobalApplication.getInstance().showDlgProgress();
             ((MainActivity)getActivity()).getDivisionData();
         }
     }

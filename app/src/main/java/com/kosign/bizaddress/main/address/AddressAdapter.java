@@ -73,6 +73,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             public void onClick(View view) {
                 //국가 코드를 붙여줌
                 String phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
+                String innerPhone = StringUtil.getCallNum(data.getStrInnerPhone(),data.getStrInnerPhone_contryCode());
+
                 //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
                 mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
                 Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();

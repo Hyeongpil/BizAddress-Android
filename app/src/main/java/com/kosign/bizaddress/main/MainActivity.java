@@ -31,6 +31,7 @@ import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.ViewPageAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 emplList = pref.getEmplList();
                 divisionList = pref.getDivisionList();
+                HashMap<String, String> divisionMap = pref.getDivisionHashMap();
                 //직원 데이터
                 if (emplList == null) {
                     getEmplData();
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity{
                     getDivisionData();
                 }else{
                     divisionFragment.setData(divisionList);
+                    GlobalApplication.getInstance().setDivision_map(divisionMap);
                 }
             }
         },100);

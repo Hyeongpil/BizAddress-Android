@@ -12,6 +12,7 @@ import com.kosign.bizaddress.model.UserInfo;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by jung on 2016-02-23.
@@ -52,6 +53,14 @@ public class EmplPreference {
         editor.putString("DivisionList", toJson((value)));
         editor.commit();
     }
+
+    public void putDivisionHashMap(HashMap<String, String> value){
+        SharedPreferences pref = mContext.getSharedPreferences(mPreferenceId, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("DivisionHashMap", toJson((value)));
+        editor.commit();
+    }
+
     public static String toJson(Object jsonObject) {
         return new Gson().toJson(jsonObject);
     }
@@ -80,6 +89,19 @@ public class EmplPreference {
             Log.e(TAG,"gson 변환 오류"+e.getMessage());
         }
         return divisionList;
+    }
+
+    public HashMap<String, String> getDivisionHashMap(){
+        SharedPreferences pref = mContext.getSharedPreferences(mPreferenceId, Activity.MODE_PRIVATE);
+        HashMap<String, String> divisionHashMap = new HashMap<>();
+        try{
+            String json = pref.getString("DivisionHashMap","");
+            divisionHashMap = (HashMap<String, String>)fromJson(json, new TypeToken<HashMap<String, String>>() {}.getType());
+            return divisionHashMap;
+        }catch (Exception e){
+            Log.e(TAG,"gson 변환 오류"+e.getMessage());
+        }
+        return divisionHashMap;
     }
 
     public static Object fromJson(String jsonString, Type type) {

@@ -51,7 +51,7 @@ public class DivisionThread extends Thread {
     public DivisionThread(Handler handler, Context mContext) {
         this.mContext = mContext;
         this.handler = handler;
-        division_map = GlobalApplication.getInstance().getDivision_map(); // 부서 맵 초기화
+        division_map = new HashMap<>(); // 부서 맵 초기화
     }
 
     @Override
@@ -91,43 +91,48 @@ public class DivisionThread extends Thread {
                         divisionList = new ArrayList<>();
                         int highDivision_count = -1; // 데이터 값이 순서대로 들어오므로 상위 부서의 카운트를 추가한다
                         int division_count = -1;
-                        for(int i = 0; i < divisionRepo.getRESP_DATA().get(0).getREC().size() ; i++){
-                            ArrayList<DivisionRepo.RESP_DATA.REC> rec = divisionRepo.getRESP_DATA().get(0).getREC();
-                            //회사 이름
-                            if(rec.get(i).getHigh_division() == null){
-                                company = rec.get(i).getDivision();
-                                divisionList.add(new HighDivision(rec.get(i).getDivision()));
-                                division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
-                                highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
-                            }
-                            //상위 부서
-                            else if(rec.get(i).getHigh_division().equals(company)){
-                                divisionList.add(new HighDivision(rec.get(i).getDivision()));
-                                division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
-                                highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
-                                division_count = -1; // 상위 부서가 새로 만들어졌으므로 중간 부서 카운트 초기화
-                            }//중간 부서
-                            else if(divisionList.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())){
-                                divisionList.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(),rec.get(i).getDivision_cd()));
-                                division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
-                                division_count++;
-                            }else{//하위 부서도 중간부서에 포함
-                                for(int j = 0; j < divisionList.get(highDivision_count).getDivision().size(); j++){
-                                    if(divisionList.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())){
-                                        String temp = "   ㄴ "+rec.get(i).getDivision(); // 하위 부서는 앞에 공백을 추가
-                                        divisionList.get(highDivision_count).getDivision().add(new Division(temp,rec.get(i).getDivision_cd()));
-                                        division_map.put(rec.get(i).getDivision(),rec.get(i).getDivision_cd());
-                                        division_count++;
-                                        break;
+                        try {
+                            for (int i = 0; i < divisionRepo.getRESP_DATA().get(0).getREC().size(); i++) {
+                                ArrayList<DivisionRepo.RESP_DATA.REC> rec = divisionRepo.getRESP_DATA().get(0).getREC();
+                                //회사 이름
+                                if (rec.get(i).getHigh_division() == null) {
+                                    company = rec.get(i).getDivision();
+                                    divisionList.add(new HighDivision(rec.get(i).getDivision()));
+                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
+                                    highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
+                                }
+                                //상위 부서
+                                else if (rec.get(i).getHigh_division().equals(company)) {
+                                    divisionList.add(new HighDivision(rec.get(i).getDivision()));
+                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
+                                    highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
+                                    division_count = -1; // 상위 부서가 새로 만들어졌으므로 중간 부서 카운트 초기화
+                                }//중간 부서
+                                else if (divisionList.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())) {
+                                    divisionList.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(), rec.get(i).getDivision_cd()));
+                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
+                                    division_count++;
+                                } else {//하위 부서도 중간부서에 포함
+                                    for (int j = 0; j < divisionList.get(highDivision_count).getDivision().size(); j++) {
+                                        if (divisionList.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())) {
+                                            String temp = "   ㄴ " + rec.get(i).getDivision(); // 하위 부서는 앞에 공백을 추가
+                                            divisionList.get(highDivision_count).getDivision().add(new Division(temp, rec.get(i).getDivision_cd()));
+                                            division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd());
+                                            division_count++;
+                                            break;
+                                        }
                                     }
                                 }
                             }
+                        }catch (Exception e){
+                            Log.e(TAG,"부서 정렬 오류");
+                            Toast.makeText(mContext, "부서 정렬을 실패했습니다.\n새로고침 해주세요.", Toast.LENGTH_SHORT).show();
                         }
                         //메인의 DivisionDataReceiveHandler 로 보내줌
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("DivisionThread", divisionList);
-                        bundle.putString("company", company);
+                        pref.putDivisionHashMap(division_map);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{

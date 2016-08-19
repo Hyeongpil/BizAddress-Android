@@ -41,6 +41,7 @@ public class HighDivisionViewHolder extends ParentViewHolder {
     public HighDivisionViewHolder(View itemView, final Context mContext) {
         super(itemView);
         this.mContext = mContext;
+        //GlobalApplication 에서 부서 hashmap을 가져옴
         division_map = GlobalApplication.getInstance().getDivision_map();
         highDivision_name = (TextView) itemView.findViewById(R.id.division_high_name);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.division_high_arrow);
@@ -84,7 +85,6 @@ public class HighDivisionViewHolder extends ParentViewHolder {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             RotateAnimation rotateAnimation;
             if (expanded) { // rotate clockwise
-
                 rotateAnimation = new RotateAnimation(ROTATED_POSITION,
                         INITIAL_POSITION,
                         RotateAnimation.RELATIVE_TO_SELF, 0.5f,

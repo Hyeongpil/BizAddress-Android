@@ -130,9 +130,10 @@ public class AddressFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //검색어가 없으면 초기 데이터를 보여준다
-                if(search_et.isFocusable() && search_et.getText().toString().equals("")){
+                if(search_et.isFocusable() && String.valueOf(editable).equals("")){
+                    mListData = new ArrayList<>(); // mListData 초기화
+                    mListDataCount = 20; // 카운트 초기화
                     searching = false;
-                    initialData = GlobalApplication.getInstance().getInitialData();
                     copyListData();
                 }
             }

@@ -60,6 +60,7 @@ public class GlobalApplication extends Application {
     }
 
     public HashMap<String, String> getDivision_map() {return division_map;}
+    public void setDivision_map(HashMap<String, String> division_map) {this.division_map = division_map;}
 
     public ArrayList<UserInfo> getInitialData() {return initialData;}
     public void setInitialData(ArrayList<UserInfo> initialData) {this.initialData = initialData;}
@@ -68,7 +69,6 @@ public class GlobalApplication extends Application {
         dlgProgress = dialog;
         dlgProgress.setMessage("데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
         dlgProgress.setCancelable(true);
-//                = dlgProgress.show(currentActivity, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
     }
     public void showDlgProgress(){
         dlgProgress.show();
