@@ -126,7 +126,7 @@ public class DivisionThread extends Thread {
                         //메인의 DivisionDataReceiveHandler 로 보내줌
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("divisionList", divisionList);
+                        bundle.putSerializable("DivisionThread", divisionList);
                         bundle.putString("company", company);
                         msg.setData(bundle);
                         handler.sendMessage(msg);

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.model.UserInfo;
+import com.kosign.bizaddress.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +50,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
         //부서가 없으면 부서 미지정
         String division = (data.getStrDivision() == null) ? "부서 미지정" : data.getStrDivision();
-        String phone = data.getStrPhoneNum();
+        String phone = StringUtil.getViewNum(data.getStrPhone(),data.getStrPhone_contryCode());
         //내선 번호가 있을 땐 부서 / 내선번호로 출력
-        try{if(!data.getStrInnerPhoneNum().equals("")){
-            phone = phone+" / ";
+        try{if(!data.getStrInnerPhone().equals("")){
+            phone = phone+" /";
         }}catch (NullPointerException e){}
         holder.getName().setText(data.getStrName());
-        holder.getInner_phone().setText(data.getStrInnerPhoneNum());
+        holder.getInner_phone().setText(StringUtil.getViewNum(data.getStrInnerPhone(),data.getStrInnerPhone_contryCode()));
         holder.getDivision().setText(division);
         holder.getPhone().setText(phone);
 
@@ -70,11 +71,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         holder.getCall().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //번호가 9자리보다 작으면 캄보디아 국가코드 855를 붙여줌
-                String phone = data.getStrPhoneNum();
-                if(phone.length() < 9){
-                    phone = "855"+phone;
-                }
+                //국가 코드를 붙여줌
+                String phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
                 //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
                 mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
                 Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();

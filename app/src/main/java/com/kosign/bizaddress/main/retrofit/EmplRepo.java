@@ -33,7 +33,8 @@ public class EmplRepo implements Serializable{
             @SerializedName("EML") String email; // 이메일
             @SerializedName("EXNM_NO") String innerPhoneNum; // 내선번호
             @SerializedName("PRFL_PHTG") String profileImg; // 프로필 사진
-
+            @SerializedName("CLPH_NTNL_CD") String phone_countryCode; // 휴대폰 국가 코드
+            @SerializedName("EXNM_NO_NTNL_CD") String innerPhone_contryCode; // 내선번호 국가 코드
             public String getName() {return name;}
             public String getPhoneNum() {return phoneNum;}
             public String getCompany() {return company;}
@@ -42,6 +43,8 @@ public class EmplRepo implements Serializable{
             public String getEmail() {return email;}
             public String getInnerPhoneNum() {return innerPhoneNum;}
             public String getProfileImg() {return profileImg;}
+            public String getPhone_countryCode() {return phone_countryCode;}
+            public String getInnerPhone_contryCode() {return innerPhone_contryCode;}
         }
         public ArrayList<EmplRepo.RESP_DATA.REC> getREC() {return REC;}
         public String getTOTL_RSLT_CNT() {return TOTL_RSLT_CNT;}

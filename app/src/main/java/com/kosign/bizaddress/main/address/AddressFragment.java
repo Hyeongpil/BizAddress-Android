@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main.address;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ public class AddressFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ArrayList<UserInfo> initialData; // 검색 결과 총 데이터
     private ArrayList<UserInfo> mListData; // 20개씩 끊어서 보여주는 데이터
+    private ProgressDialog dlgProgress;
 
     private EditText search_et;
     private TextWatcher textWatcher;
@@ -114,7 +116,7 @@ public class AddressFragment extends Fragment {
                         }catch (NullPointerException e){}
 
                         try { // 번호 검색
-                            String searchPhoneNum = searchInitialData.get(temp).getStrPhoneNum().trim();
+                            String searchPhoneNum = searchInitialData.get(temp).getStrPhone().trim();
                             // 번호 검색
                             if(searchPhoneNum.startsWith(keyWord)){
                                 mListData.add(searchInitialData.get(temp));
@@ -235,6 +237,7 @@ public class AddressFragment extends Fragment {
     }
 
     public void refreshing(){
+        dlgProgress = ProgressDialog.show(getActivity(), null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
         searching = false;
         search_et.setText("");
         ((MainActivity)getActivity()).getEmplData();

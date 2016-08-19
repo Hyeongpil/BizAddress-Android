@@ -122,10 +122,12 @@ public class EmplThread extends Thread {
                             temp.setStrCompany(company[0]);
                             temp.setStrDivision(rec.get(i).getDivision());
                             temp.setStrEmail(rec.get(i).getEmail());
-                            temp.setStrPhoneNum(rec.get(i).getPhoneNum());
+                            temp.setStrPhone(rec.get(i).getPhoneNum());
                             temp.setStrPosition(rec.get(i).getPosition());
                             temp.setStrProfileImg(rec.get(i).getProfileImg());
-                            temp.setStrInnerPhoneNum(rec.get(i).getInnerPhoneNum());
+                            temp.setStrInnerPhone(rec.get(i).getInnerPhoneNum());
+                            temp.setStrPhone_contryCode(rec.get(i).getPhone_countryCode());
+                            temp.setStrInnerPhone_contryCode(rec.get(i).getInnerPhone_contryCode());
                             emplList.add(temp);
                         }
                         //메인의 EmplDataReceiveHandler 로 보내줌

@@ -1,9 +1,12 @@
 package com.kosign.bizaddress.util;
 
+import android.util.Log;
+
 /**
  * Created by jung on 2016-02-23.
  */
 public class StringUtil {
+    final static String TAG = "StringUtil";
 
     public static String nvl(String s){
         return nvl(s,"");
@@ -61,6 +64,34 @@ public class StringUtil {
             tel3 = temp.substring(4,temp.length());
             return tel1 + "-" + tel2 + "-" + tel3;
         }
+    }
+
+
+    //뷰에 보여지는 번호는 (국가코드) 형태로 한다.
+    public static String getViewNum(String num, String code){
+        try {
+            if (num.substring(0, 1).equals("0")) {
+                num = num.substring(1);
+            }
+            num = "(" + code.substring(3) + ")" + num;
+        }catch (Exception e){
+            Log.d(TAG,"국가코드 오류");
+        }
+
+        return num;
+    }
+    //전화 걸기나 연락처 저장에 사용되는 번호는 바로 붙인다.
+    public static String getCallNum(String num, String code){
+        try {
+            if (num.substring(0, 1).equals("0")) {
+                num = num.substring(1);
+            }
+            num = code.substring(3) + num;
+        }catch (Exception e){
+            Log.d(TAG,"국가코드 오류");
+        }
+
+        return num;
     }
 
 }

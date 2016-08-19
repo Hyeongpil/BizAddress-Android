@@ -100,7 +100,7 @@ public class DivisionEmplThread extends Thread {
                             temp.setStrName(rec.get(i).getName());
                             temp.setStrDivision(rec.get(i).getDivision());
                             temp.setStrEmail(rec.get(i).getEmail());
-                            temp.setStrPhoneNum(rec.get(i).getPhoneNum());
+                            temp.setStrPhone(rec.get(i).getPhoneNum());
                             temp.setStrPosition(rec.get(i).getPosition());
                             temp.setStrProfileImg(rec.get(i).getProfileImg());
                             userdata.add(temp);

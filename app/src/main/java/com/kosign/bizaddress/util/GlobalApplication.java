@@ -2,6 +2,7 @@ package com.kosign.bizaddress.util;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 
 import com.kosign.bizaddress.model.UserInfo;
 
@@ -17,6 +18,7 @@ public class GlobalApplication extends Application {
     private EmplPreference pref;
     private HashMap<String,String> division_map = new HashMap<>(); // 부서 코드를 담고 있는 부서 해시맵 < 이름 , 부서코드 >
     private ArrayList<UserInfo> initialData;
+    private ProgressDialog dlgProgress;
 
     public static Activity getCurrentActivity() {
         return currentActivity;
@@ -60,4 +62,11 @@ public class GlobalApplication extends Application {
 
     public ArrayList<UserInfo> getInitialData() {return initialData;}
     public void setInitialData(ArrayList<UserInfo> initialData) {this.initialData = initialData;}
+
+    public void setDlgProgress(){
+        dlgProgress = ProgressDialog.show(instance, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+    }
+    public void dismissDlgProgress(){
+        dlgProgress.dismiss();
+    }
 }

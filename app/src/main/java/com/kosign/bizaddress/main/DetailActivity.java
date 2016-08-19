@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.model.UserInfo;
+import com.kosign.bizaddress.util.StringUtil;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -37,6 +38,7 @@ public class DetailActivity extends Activity{
     private UserInfo data;
     private ClipboardManager clipboardManager;
     private String phone;
+    private String phone_contryCode;
 
 
     @Override
@@ -46,7 +48,6 @@ public class DetailActivity extends Activity{
         setContentView(R.layout.activity_detail);
         init();
         setData();
-
     }
 
     private void init(){
@@ -61,20 +62,12 @@ public class DetailActivity extends Activity{
         call = (ImageView) findViewById(R.id.detail_call);
         data = (UserInfo) getIntent().getSerializableExtra("data");
         clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        //핸드폰 번호가 9자리보다 작으면 앞에 캄보디아 국가코드 855를 붙여줌
-        phone = data.getStrPhoneNum();
-        if(phone.length() < 9){
-            phone = "855"+phone;
-        }
+        phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
     }
 
     private void setData(){
         name.setText(data.getStrName());
-        String tempPhone = data.getStrPhoneNum();
-        if(tempPhone.length() < 9){
-            tempPhone = "(855)" + tempPhone;
-        }
-        phonenum.setText(tempPhone);
+        phonenum.setText(StringUtil.getViewNum(data.getStrPhone(),data.getStrPhone_contryCode()));
         division.setText(data.getStrDivision());
         email.setText(data.getStrEmail());
         //프로필 사진

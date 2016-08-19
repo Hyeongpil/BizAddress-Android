@@ -1,6 +1,5 @@
 package com.kosign.bizaddress.main;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
     private GroupFragment groupFragment;
     private ArrayList<UserInfo> emplList = new ArrayList<>();
     private ArrayList<HighDivision> divisionList = new ArrayList<>();
-    private ProgressDialog dlgProgress;
+
     private EmplPreference pref;
     private com.kosign.bizaddress.model.BizTitleBar title;
 
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity{
         divisionFragment = new DivisionFragment();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment = new GroupFragment();
-        dlgProgress = ProgressDialog.show(MainActivity.this, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+        GlobalApplication.getInstance().setDlgProgress();
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity{
                 }else {
                     //타이틀 회사 이름으로
                     GlobalApplication.getInstance().setInitialData(emplList); // 글로벌 어플리케이션에 초기값 저장
-                    dlgProgress.dismiss();
+                    GlobalApplication.getInstance().dismissDlgProgress();
                     addressFragment.setData(emplList);
                 }
                 //부서 데이터
@@ -176,7 +175,7 @@ public class MainActivity extends AppCompatActivity{
     ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            dlgProgress.show();
+            GlobalApplication.getInstance().setDlgProgress();
             getDivisionData();
             addressFragment.refreshing();
         }
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity{
                 //직원 데이터 pref 저장
                 pref.putEmplList(emplList); // pref에 저장
             }catch (Exception e){Log.e(TAG,"데이터 가져오기 실패 :"+e.getMessage());}
-            dlgProgress.dismiss();
+            GlobalApplication.getInstance().dismissDlgProgress();
             addressFragment.setData(emplList);
             GlobalApplication.getInstance().setInitialData(emplList); // 글로벌 어플리케이션에 초기값 저장
             stopRefresh();
@@ -221,10 +220,10 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            divisionList = (ArrayList<HighDivision>) msg.getData().getSerializable("divisionList");
+            divisionList = (ArrayList<HighDivision>) msg.getData().getSerializable("DivisionThread");
             pref.putDivisionList(divisionList);
             stopRefresh();
-            dlgProgress.dismiss();
+            GlobalApplication.getInstance().dismissDlgProgress();
             divisionFragment.setData(divisionList);
         }
     }
@@ -246,7 +245,7 @@ public class MainActivity extends AppCompatActivity{
      * 주소록 연동 실패시 다이얼로그 멈춤
      */
     public void stopDlgProgress(){
-        dlgProgress.dismiss();
+        GlobalApplication.getInstance().dismissDlgProgress();
     }
 
     /**
