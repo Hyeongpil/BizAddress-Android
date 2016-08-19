@@ -237,7 +237,7 @@ public class AddressFragment extends Fragment {
     }
 
     public void refreshing(){
-        dlgProgress = ProgressDialog.show(getActivity(), null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+        GlobalApplication.getInstance().showDlgProgress();
         searching = false;
         search_et.setText("");
         ((MainActivity)getActivity()).getEmplData();

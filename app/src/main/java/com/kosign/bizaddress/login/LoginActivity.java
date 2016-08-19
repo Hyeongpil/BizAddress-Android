@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity{
                     pref.putString("CHNL_ID", strChnlId);
                     pref.putString("USER_NM", strUserNm);
                     pref.putString("IMG_PATH", strImgPath);
-                    pref.putString("BSNN_NM", strBsnnNm);
+                    pref.putString("BSNN_NM", strBsnnNm.split(" ")[0]);
                     pref.putString("EML", strEml);
 
                     //Toast.makeText(getApplicationContext(), RSLT_MSG, Toast.LENGTH_LONG).show();

@@ -43,6 +43,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         instance = this;
         pref = new EmplPreference(this);
+
     }
 
     /**
@@ -63,8 +64,14 @@ public class GlobalApplication extends Application {
     public ArrayList<UserInfo> getInitialData() {return initialData;}
     public void setInitialData(ArrayList<UserInfo> initialData) {this.initialData = initialData;}
 
-    public void setDlgProgress(){
-        dlgProgress = ProgressDialog.show(instance, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+    public void setDlgProgress(ProgressDialog dialog){
+        dlgProgress = dialog;
+        dlgProgress.setMessage("데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+        dlgProgress.setCancelable(true);
+//                = dlgProgress.show(currentActivity, null, "데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
+    }
+    public void showDlgProgress(){
+        dlgProgress.show();
     }
     public void dismissDlgProgress(){
         dlgProgress.dismiss();

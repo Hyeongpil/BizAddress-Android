@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity{
 
     private EmplPreference pref;
     private com.kosign.bizaddress.model.BizTitleBar title;
+    private ProgressDialog dlgProgress;
 
     // TODO: 2016. 8. 10. 그룹 추가 하기
     @Override
@@ -66,11 +68,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void init(){
+        dlgProgress = new ProgressDialog(this);
+        GlobalApplication.getInstance().setDlgProgress(dlgProgress);
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment = new GroupFragment();
-        GlobalApplication.getInstance().setDlgProgress();
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity{
      * pref에서 직원 데이터를 확인하고 바로 가져옴
      */
     private void checkEmplData(){
-        new Handler().post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 emplList = pref.getEmplList();
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity{
                     divisionFragment.setData(divisionList);
                 }
             }
-        });
+        },100);
     }
 
     /**
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity{
     ImageView.OnClickListener refreshClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            GlobalApplication.getInstance().setDlgProgress();
+            GlobalApplication.getInstance().showDlgProgress();
             getDivisionData();
             addressFragment.refreshing();
         }
@@ -239,13 +242,6 @@ public class MainActivity extends AppCompatActivity{
             stopRefresh();
             groupFragment.setData(msg.getData());
         }
-    }
-
-    /**
-     * 주소록 연동 실패시 다이얼로그 멈춤
-     */
-    public void stopDlgProgress(){
-        GlobalApplication.getInstance().dismissDlgProgress();
     }
 
     /**

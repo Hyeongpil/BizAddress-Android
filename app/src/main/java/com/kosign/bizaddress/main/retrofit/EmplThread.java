@@ -149,7 +149,7 @@ public class EmplThread extends Thread {
                 Log.e(TAG,"onFailure ,request:"+call.request());
                 ((MainActivity)mContext).stopRefresh();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
-                ((MainActivity)mContext).stopDlgProgress();
+                GlobalApplication.getInstance().dismissDlgProgress();
             }
         });
     }
