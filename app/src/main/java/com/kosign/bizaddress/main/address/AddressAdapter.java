@@ -27,7 +27,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  * Created by Hyeongpil on 2016. 8. 4..
  */
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder>{
-    final static String TAG = "Address_Adapter";
+    final static String TAG = "AddressAdapter";
     private Context mContext;
     public List<UserInfo> mListData = null;
     private View.OnClickListener listener;
@@ -68,18 +68,32 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                 .bitmapTransform(new CropCircleTransformation(Glide.get(mContext).getBitmapPool())).into(holder.getProfileImg());
 
         //전화 걸기 버튼
-        holder.getCall().setOnClickListener(new View.OnClickListener() {
+        holder.getCall().setOnClickListener(new CallOnClickListener(data));
+        holder.getPhone().setOnClickListener(new CallOnClickListener(data));
+
+        //내선번호 클릭 시 전화 걸기
+        holder.getInner_phone().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //국가 코드를 붙여줌
-                String phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
                 String innerPhone = StringUtil.getCallNum(data.getStrInnerPhone(),data.getStrInnerPhone_contryCode());
-
-                //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
-                mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
+                mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+innerPhone)));
                 Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private class CallOnClickListener implements View.OnClickListener{
+        UserInfo data;
+
+        public CallOnClickListener(UserInfo data) {this.data = data;}
+
+        @Override
+        public void onClick(View view) {
+            String phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
+            //ACTION_DIAL 전화 걸기 화면    ACTION_CALL 전화 걸기
+            mContext.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone)));
+            Toast.makeText(mContext, data.getStrName(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

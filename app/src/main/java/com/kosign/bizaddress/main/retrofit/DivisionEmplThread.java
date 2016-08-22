@@ -112,6 +112,7 @@ public class DivisionEmplThread extends Thread {
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{
+                        GlobalApplication.getInstance().dismissDlgProgress();
                         Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
                         Log.e(TAG,""+call.request());
                         Log.e(TAG,""+divisionEmplRepo.getRSLT_CD());
@@ -123,9 +124,9 @@ public class DivisionEmplThread extends Thread {
 
             @Override
             public void onFailure(Call<DivisionEmplRepo> call, Throwable t) {
+
                 Log.e(TAG,"실패 :"+call.request());
                 ((MainActivity)mContext).stopRefresh();
-                GlobalApplication.getInstance().dismissDlgProgress();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });

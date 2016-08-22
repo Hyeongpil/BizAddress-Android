@@ -8,17 +8,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.login.LoginActivity;
 import com.kosign.bizaddress.main.address.AddressFragment;
+import com.kosign.bizaddress.main.division.DivisionDetailFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.main.group.GroupFragment;
 import com.kosign.bizaddress.main.retrofit.DivisionThread;
@@ -41,12 +44,14 @@ public class MainActivity extends AppCompatActivity{
     final static String TAG = "MainActivity";
     private final long	FINSH_INTERVAL_TIME    = 2000;
     private long		backPressedTime        = 0;
+    private FrameLayout fl_divisionDetail;
     private ImageView refresh;
     private ImageView logout;
     private ViewPageAdapter adapter;
     private ViewPager viewPager;
     private AddressFragment addressFragment;
     private DivisionFragment divisionFragment;
+    private DivisionDetailFragment divisionDetailFragment;
     private GroupFragment groupFragment;
     private ArrayList<UserInfo> emplList = new ArrayList<>();
     private ArrayList<HighDivision> divisionList = new ArrayList<>();
@@ -73,8 +78,10 @@ public class MainActivity extends AppCompatActivity{
         GlobalApplication.getInstance().setDlgProgress(dlgProgress);
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
+        divisionDetailFragment = new DivisionDetailFragment();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment = new GroupFragment();
+        fl_divisionDetail = (FrameLayout)findViewById(R.id.fl_division_detail);
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
@@ -83,6 +90,11 @@ public class MainActivity extends AppCompatActivity{
         //타이틀 세팅
         title = (com.kosign.bizaddress.model.BizTitleBar)findViewById(R.id.BizTitleBar);
         title.setTitle(pref.getString("BSNN_NM"));
+        //프레그먼트 매니저
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fl_division_detail, divisionDetailFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -147,12 +159,12 @@ public class MainActivity extends AppCompatActivity{
 
     /**
      * DivisionViewHolder 에서 부서 클릭 시 또는 GroupFragment 에서 그룹 클릭 시
-     * 부서별 직원 데이터를 받아와 addressFragment에 데이터 입력
+     * 부서별 직원 데이터를 받아와 DivisionDetailFragment 에 데이터 입력
      * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
      */
     public void getDivisionEmplData(ArrayList<UserInfo> userdata){
-        addressFragment.setData(userdata);
-        viewPager.setCurrentItem(0);
+        divisionDetailFragment.setData(userdata);
+        fl_divisionDetail.setVisibility(View.VISIBLE);
     }
 
     private void setViewpager(){
@@ -251,6 +263,7 @@ public class MainActivity extends AppCompatActivity{
      * 오류 발생 시 새로고침 멈춤
      */
     public void stopRefresh(){
+        GlobalApplication.getInstance().dismissDlgProgress();
         addressFragment.stopRefresh();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment.stopRefresh();
@@ -264,9 +277,9 @@ public class MainActivity extends AppCompatActivity{
         public void onPageSelected(int position) {
             if(position == 1){ // 부서로 스크롤 시 키보드 내리고 검색 초기화
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(addressFragment.getSearch_et().getWindowToken(), 0);
-                addressFragment.getSearch_et().clearFocus();
-                addressFragment.getSearch_et().setText("");
+                imm.hideSoftInputFromWindow(addressFragment.getEt_search().getWindowToken(), 0);
+                addressFragment.getEt_search().clearFocus();
+                addressFragment.getEt_search().setText("");
             }
         }
         @Override
@@ -282,8 +295,10 @@ public class MainActivity extends AppCompatActivity{
             moveTaskToBack(true);
             finish();
             android.os.Process.killProcess(android.os.Process.myPid());
-        }
-        else {
+        }else if(fl_divisionDetail.getVisibility() == View.VISIBLE){
+            //부서 직원 목록이 켜져 있다면 끔
+            fl_divisionDetail.setVisibility(View.INVISIBLE);
+        }else {
             backPressedTime = tempTime;
             Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한번더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
         }

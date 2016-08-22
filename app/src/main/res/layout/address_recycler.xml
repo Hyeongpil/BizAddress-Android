@@ -10,14 +10,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/address_search"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint=" 이름, 부서, 번호, 초성 검색"
-            android:drawableStart="@drawable/mini_search"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"/>
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/address_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=" 이름, 부서, 번호, 초성 검색"
+                android:drawableStart="@drawable/mini_search"
+                android:inputType="text"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"/>
+
+            <ImageView
+                android:id="@+id/address_search_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="9dp"
+                android:background="@drawable/text_del_icon"
+                android:visibility="invisible"
+                android:layout_gravity="right|center_vertical" />
+        </FrameLayout>
+
+
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/address_refresh"

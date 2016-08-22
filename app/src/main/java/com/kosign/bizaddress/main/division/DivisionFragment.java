@@ -1,5 +1,6 @@
 package com.kosign.bizaddress.main.division;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,7 @@ public class DivisionFragment extends Fragment{
     final static String TAG = "DivisionFragment";
     private SwipeRefreshLayout refreshLayout;
     public DivisionAdapter adapter;
-    private RecyclerView divi_recycler;
+    private RecyclerView rv_division;
     private ArrayList<HighDivision> divisionList;
 
     @Nullable
@@ -39,7 +40,7 @@ public class DivisionFragment extends Fragment{
     }
 
     private void init(View view){
-        divi_recycler = (RecyclerView) view.findViewById(R.id.division_recycler);
+        rv_division = (RecyclerView) view.findViewById(R.id.division_recycler);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.division_refresh);
         refreshLayout.setOnRefreshListener(new RefreshListener());
     }
@@ -65,9 +66,9 @@ public class DivisionFragment extends Fragment{
             @Override
             public void onListItemCollapsed(int position) {}// 상위부서 Collapsed 리스너
         });
-        divi_recycler.setAdapter(adapter);
-        divi_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        divi_recycler.setHasFixedSize(true);
+        rv_division.setAdapter(adapter);
+        rv_division.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv_division.setHasFixedSize(true);
     }
 
     public void stopRefresh(){

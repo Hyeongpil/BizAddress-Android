@@ -94,6 +94,9 @@ public class DivisionThread extends Thread {
                         try {
                             for (int i = 0; i < divisionRepo.getRESP_DATA().get(0).getREC().size(); i++) {
                                 ArrayList<DivisionRepo.RESP_DATA.REC> rec = divisionRepo.getRESP_DATA().get(0).getREC();
+                                Log.e(TAG,"high :"+rec.get(i).getHigh_division());
+                                Log.e(TAG,"divi :"+rec.get(i).getDivision());
+                                Log.e(TAG,"---------------");
                                 //회사 이름
                                 if (rec.get(i).getHigh_division() == null) {
                                     company = rec.get(i).getDivision();

@@ -1,6 +1,6 @@
 package com.kosign.bizaddress.main.address;
 
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +13,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.DetailActivity;
@@ -32,15 +37,15 @@ import java.util.ArrayList;
  */
 public class AddressFragment extends Fragment {
     final static String TAG = "AddressFragment";
-    private RecyclerView add_recycler;
+    private RecyclerView rv_address;
     private CoordinatorLayout mCoordinatorLayout;
     private AddressAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
     private ArrayList<UserInfo> initialData; // 검색 결과 총 데이터
     private ArrayList<UserInfo> mListData; // 20개씩 끊어서 보여주는 데이터
-    private ProgressDialog dlgProgress;
 
-    private EditText search_et;
+    private EditText et_search;
+    private ImageView iv_clear;
     private TextWatcher textWatcher;
     private boolean searching = false; // 검색 중 일땐 BottomRefreshListener 비 활성화
     private int mListDataCount; // 바닥에 닿을 때 마다 +20씩 증가
@@ -56,18 +61,36 @@ public class AddressFragment extends Fragment {
     }
 
     private void init(View view){
-        add_recycler = (RecyclerView) view.findViewById(R.id.address_recycler);
+        rv_address = (RecyclerView) view.findViewById(R.id.address_recycler);
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.address_coordinatorLayout);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.address_refresh);
-        search_et = (EditText) view.findViewById(R.id.address_search);
+        et_search = (EditText) view.findViewById(R.id.address_search);
+        iv_clear = (ImageView) view.findViewById(R.id.address_search_clear);
         refreshLayout.setOnRefreshListener(new RefreshListener());
         adapter = new AddressAdapter(getActivity(),new AddressClickListener());
-        add_recycler.setAdapter(adapter);
+        rv_address.setAdapter(adapter);
 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        add_recycler.setLayoutManager(manager);
-        add_recycler.setHasFixedSize(true);
-        add_recycler.setOnScrollListener(new BottomRefreshListener());
+        rv_address.setLayoutManager(manager);
+        rv_address.setHasFixedSize(true);
+        rv_address.setOnScrollListener(new BottomRefreshListener());
+        et_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() { // 검색 버튼 클릭 시 키보드 내리기
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                InputMethodManager mInputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                mInputMethodManager.hideSoftInputFromWindow(et_search.getWindowToken(), 0);
+                return true;
+            }
+        });
+        iv_clear.setOnClickListener(new View.OnClickListener() { //검색 지우기
+            @Override
+            public void onClick(View view) {
+                et_search.setText("");
+                et_search.clearFocus();
+                iv_clear.setVisibility(View.INVISIBLE);
+            }
+        });
         setSearch();
     }
 
@@ -80,8 +103,9 @@ public class AddressFragment extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                iv_clear.setVisibility(View.VISIBLE);
                 ArrayList<UserInfo> searchInitialData = GlobalApplication.getInstance().getInitialData(); // 검색용 전 직원 데이터
-                if(search_et.isFocusable() && search_et.length() > 0){
+                if(et_search.isFocusable() && et_search.length() > 0){
                     searching = true;
                     mListData.clear(); // 초기화
                     for(int temp = 0; temp < searchInitialData.size(); temp++){
@@ -130,17 +154,18 @@ public class AddressFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //검색어가 없으면 초기 데이터를 보여준다
-                if(search_et.isFocusable() && String.valueOf(editable).equals("")){
+                if(et_search.isFocusable() && String.valueOf(editable).equals("")){
                     mListData = new ArrayList<>(); // mListData 초기화
                     mListDataCount = 20; // 카운트 초기화
                     searching = false;
+                    //부서 검색을 했을때도 전체 직원 리스트를 가져오기 위해 글로벌에서 초기화
+                    initialData = GlobalApplication.getInstance().getInitialData();
                     copyListData();
                 }
             }
         };
-        search_et.addTextChangedListener(textWatcher);
+        et_search.addTextChangedListener(textWatcher);
     }
-
 
     /**
      * EmplThread 에서 받아온 전체 직원 목록 데이터를
@@ -215,7 +240,7 @@ public class AddressFragment extends Fragment {
         @Override
         public void onClick(View view) {
             try {
-                final int position = add_recycler.getChildLayoutPosition(view);
+                final int position = rv_address.getChildLayoutPosition(view);
                 UserInfo temp = mListData.get(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("data", temp);
@@ -240,9 +265,9 @@ public class AddressFragment extends Fragment {
     public void refreshing(){
         GlobalApplication.getInstance().showDlgProgress();
         searching = false;
-        search_et.setText("");
+        et_search.setText("");
         ((MainActivity)getActivity()).getEmplData();
     }
 
-    public EditText getSearch_et() {return search_et;}
+    public EditText getEt_search() {return et_search;}
 }

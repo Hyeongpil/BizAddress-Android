@@ -3,6 +3,7 @@ package com.kosign.bizaddress.util;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 
 import com.kosign.bizaddress.model.UserInfo;
 
@@ -69,6 +70,12 @@ public class GlobalApplication extends Application {
         dlgProgress = dialog;
         dlgProgress.setMessage("데이터를 불러오는 중입니다.\n잠시만 기다려 주세요.");
         dlgProgress.setCancelable(true);
+        dlgProgress.setOnCancelListener(new DialogInterface.OnCancelListener(){
+            @Override
+            public void onCancel(DialogInterface dialog){
+                dlgProgress.cancel();
+                dlgProgress.dismiss();
+            }});
     }
     public void showDlgProgress(){
         dlgProgress.show();
@@ -76,4 +83,5 @@ public class GlobalApplication extends Application {
     public void dismissDlgProgress(){
         dlgProgress.dismiss();
     }
+
 }
