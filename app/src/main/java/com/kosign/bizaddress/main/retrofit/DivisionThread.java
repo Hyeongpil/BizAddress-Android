@@ -12,6 +12,7 @@ import com.kosign.bizaddress.api.EmplApi;
 import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.Division;
 import com.kosign.bizaddress.model.HighDivision;
+import com.kosign.bizaddress.model.LowDivision;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.StringUtil;
@@ -43,7 +44,6 @@ public class DivisionThread extends Thread {
     private JSONObject mApiTrnHead = new JSONObject();
     private JSONObject mApiTrnReqData = new JSONObject();
 
-    private String company;
     private ArrayList<HighDivision> divisionList;
     private HashMap<String, String> division_map;
 
@@ -91,44 +91,70 @@ public class DivisionThread extends Thread {
                         divisionList = new ArrayList<>();
                         int highDivision_count = -1; // 데이터 값이 순서대로 들어오므로 상위 부서의 카운트를 추가한다
                         int division_count = -1;
+                        int lowDivision_count = -1;
+                        String nowHighDivision = ""; // 현재 상위 부서
                         try {
                             for (int i = 0; i < divisionRepo.getRESP_DATA().get(0).getREC().size(); i++) {
                                 ArrayList<DivisionRepo.RESP_DATA.REC> rec = divisionRepo.getRESP_DATA().get(0).getREC();
-                                Log.e(TAG,"high :"+rec.get(i).getHigh_division());
-                                Log.e(TAG,"divi :"+rec.get(i).getDivision());
-                                Log.e(TAG,"---------------");
-                                //회사 이름
-                                if (rec.get(i).getHigh_division() == null) {
-                                    company = rec.get(i).getDivision();
-                                    divisionList.add(new HighDivision(rec.get(i).getDivision()));
-                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
-                                    highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
-                                }
+                                String highDivision = rec.get(i).getHigh_division();
+                                String nowDivision = rec.get(i).getDivision();
+                                String divisionCode = rec.get(i).getDivision_cd();
+                                //부서 데이터 보기
+//                                Log.e(TAG,"high :"+rec.get(i).getHigh_division());
+//                                Log.e(TAG,"divi :"+rec.get(i).getDivision());
+//                                Log.e(TAG,"---------------");
                                 //상위 부서
-                                else if (rec.get(i).getHigh_division().equals(company)) {
-                                    divisionList.add(new HighDivision(rec.get(i).getDivision()));
-                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
+                                if (highDivision == null) {
+                                    nowHighDivision = nowDivision;
+                                    divisionList.add(new HighDivision(nowDivision));
+                                    division_map.put(nowDivision, divisionCode); // 부서 해시맵에 부서코드 추가
                                     highDivision_count++; // 카운트는 0부터 시작해서 상위 부서가 생길때마다 1씩 증가
                                     division_count = -1; // 상위 부서가 새로 만들어졌으므로 중간 부서 카운트 초기화
-                                }//중간 부서
-                                else if (divisionList.get(highDivision_count).getHighDivision_name().equals(rec.get(i).getHigh_division())) {
-                                    divisionList.get(highDivision_count).getDivision().add(new Division(rec.get(i).getDivision(), rec.get(i).getDivision_cd()));
-                                    division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd()); // 부서 해시맵에 부서코드 추가
-                                    division_count++;
-                                } else {//하위 부서도 중간부서에 포함
+                                }
+                                //중간 부서
+                                else if (highDivision.equals(nowHighDivision)) {
+                                    divisionList.get(highDivision_count).getDivision().add(new Division(nowDivision));
+                                    division_map.put(nowDivision, divisionCode); // 부서 해시맵에 부서코드 추가
+                                    division_count++; // 카운트는 0부터 시작해서 중간 부서가 생길때마다 1씩 증가
+                                    lowDivision_count = -1; // 중간 부서가 새로 만들어졌으므로 하위 부서 카운트 초기화
+                                }//하위 부서
+                                else if (divisionList.get(highDivision_count).getDivision().get(division_count).getDivision_name().equals(highDivision)) {
+                                    divisionList.get(highDivision_count).getDivision().get(division_count).getLowDivision().add(new LowDivision(nowDivision));
+                                    division_map.put(nowDivision, divisionCode); // 부서 해시맵에 부서코드 추가
+                                    lowDivision_count++;
+                                } else {//최하위 부서도 하위부서에 포함
                                     for (int j = 0; j < divisionList.get(highDivision_count).getDivision().size(); j++) {
-                                        if (divisionList.get(highDivision_count).getDivision().get(j).getDivision_name().equals(rec.get(i).getHigh_division())) {
-                                            String temp = "   ㄴ " + rec.get(i).getDivision(); // 하위 부서는 앞에 공백을 추가
-                                            divisionList.get(highDivision_count).getDivision().add(new Division(temp, rec.get(i).getDivision_cd()));
-                                            division_map.put(rec.get(i).getDivision(), rec.get(i).getDivision_cd());
-                                            division_count++;
+                                        try {
+                                            if (divisionList.get(highDivision_count).getDivision().get(j).getLowDivision().get(lowDivision_count).getLowDivision_name().equals(highDivision)) {
+                                                String temp = "   ㄴ " + nowDivision; // 하위 부서는 앞에 공백을 추가
+                                                divisionList.get(highDivision_count).getDivision().get(division_count).getLowDivision().add(new LowDivision(temp));
+                                                division_map.put(nowDivision, divisionCode);
+                                                lowDivision_count++;
+                                                break;
+                                            }
+                                        }catch (IndexOutOfBoundsException e){ // 최하위의 하위부서일 경우 캐치로 잡아 넣는다.
+                                            String temp = "   ㄴ " + nowDivision; // 하위 부서는 앞에 공백을 추가
+                                            divisionList.get(highDivision_count).getDivision().get(division_count).getLowDivision().add(new LowDivision(temp));
+                                            division_map.put(nowDivision, divisionCode);
+                                            lowDivision_count++;
                                             break;
                                         }
                                     }
                                 }
                             }
+                            //정렬 데이터 보기
+//                            for(int i = 0; i < divisionList.size(); i++){
+//                                Log.e(TAG,""+divisionList.get(i).getHighDivision_name());
+//                                for(int j = 0; j < divisionList.get(i).getDivision().size(); j++){
+//                                    Log.e(TAG,"   "+divisionList.get(i).getDivision().get(j).getDivision_name());
+//                                    for(int k = 0; k < divisionList.get(i).getDivision().get(j).getLowDivision().size(); k++){
+//                                        Log.e(TAG,"    "+divisionList.get(i).getDivision().get(j).getLowDivision().get(k).getLowDivision_name());
+//                                    }
+//                                }
+//                            }
+
                         }catch (Exception e){
-                            Log.e(TAG,"부서 정렬 오류");
+                            Log.e(TAG,"부서 정렬 오류 :"+e.getMessage());
                             Toast.makeText(mContext, "부서 정렬을 실패했습니다.\n새로고침 해주세요.", Toast.LENGTH_SHORT).show();
                         }
                         //메인의 DivisionDataReceiveHandler 로 보내줌

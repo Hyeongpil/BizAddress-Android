@@ -14,4 +14,18 @@
         android:textSize="15sp"
         android:textStyle="bold"/>
 
+    <ImageView
+        android:id="@+id/division_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/search"
+        android:layout_gravity="center"
+        android:layout_marginRight="5dp"/>
+
+    <ImageView
+        android:id="@+id/division_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/division_arrow"/>
+
 </LinearLayout>

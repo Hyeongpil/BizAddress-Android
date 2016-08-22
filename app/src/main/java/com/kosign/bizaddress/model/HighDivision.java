@@ -1,6 +1,6 @@
 package com.kosign.bizaddress.model;
 
-import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.zaihuishou.expandablerecycleradapter.model.ExpandableListItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * Created by Hyeongpil on 2016. 8. 5..
  */
-public class HighDivision implements Serializable, ParentListItem {
-
+public class HighDivision implements Serializable, ExpandableListItem {
+    public boolean mExpanded = false;
     String highDivision_name;
     ArrayList<Division> division;
 
@@ -25,8 +25,20 @@ public class HighDivision implements Serializable, ParentListItem {
     }
 
     @Override
-    public boolean isInitiallyExpanded() {
-        return false;
+    public boolean isExpanded() {
+        return mExpanded;
+    }
+
+    @Override
+    public void setExpanded(boolean isExpanded) {
+        mExpanded = isExpanded;
+    }
+
+    @Override
+    public String toString() {
+        return "HighDivision{" +
+                "name='" + highDivision_name + '\'' +
+                '}';
     }
 
     public String getHighDivision_name() {return highDivision_name;}

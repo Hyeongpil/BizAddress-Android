@@ -2,6 +2,7 @@ package com.kosign.bizaddress.main.division;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.MainActivity;
+import com.kosign.bizaddress.model.Division;
 import com.kosign.bizaddress.model.HighDivision;
+import com.kosign.bizaddress.model.LowDivision;
 import com.kosign.bizaddress.util.GlobalApplication;
+import com.zaihuishou.expandablerecycleradapter.adapter.BaseExpandableAdapter;
+import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractAdapterItem;
 
 import java.util.ArrayList;
 
@@ -25,9 +29,13 @@ import java.util.ArrayList;
 public class DivisionFragment extends Fragment{
     final static String TAG = "DivisionFragment";
     private SwipeRefreshLayout refreshLayout;
-    public DivisionAdapter adapter;
     private RecyclerView rv_division;
     private ArrayList<HighDivision> divisionList;
+    private BaseExpandableAdapter adapter;
+
+    private final int ITEM_TYPE_HIGHDIVISION = 1;
+    private final int ITEM_TYPE_DIVISION = 2;
+    private final int ITEM_TYPE_LOWDIVISION = 3;
 
     @Nullable
     @Override
@@ -48,23 +56,46 @@ public class DivisionFragment extends Fragment{
     public void setData (ArrayList<HighDivision> divisionList){
         this.divisionList = divisionList;
         setAdapter();
-//        데이터 보는 로그
-//        for(int i= 0 ; i<divisionList.size(); i++){
-//            Log.e(TAG,"high :"+divisionList.get(i).getHighDivision_name());
-//            for(int j = 0; j< divisionList.get(i).getDivision().size(); j++){
-//                Log.e(TAG,"division :"+divisionList.get(i).getDivision().get(j).getDivision_name());
-//            }
-//        }
     }
 
     private void setAdapter(){
-        adapter = new DivisionAdapter(getActivity(), divisionList);
+        adapter = new BaseExpandableAdapter(divisionList) {
+            @NonNull
+            @Override
+            public AbstractAdapterItem<Object> getItemView(Object type) {
+                int itemType = (int) type;
+                switch (itemType) {
+                    case ITEM_TYPE_HIGHDIVISION:
+                        return new HighDivisionItem(getActivity());
+                    case ITEM_TYPE_DIVISION:
+                        return new DivisionItem(getActivity());
+                    case ITEM_TYPE_LOWDIVISION:
+                        return new LowDivisionItem(getActivity());
+                }
+                return null;
+            }
 
-        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override
-            public void onListItemExpanded(int position) {} // 상위부서 Expanded 리스너
+            public Object getItemViewType(Object t) {
+                if (t instanceof HighDivision) {
+                    return ITEM_TYPE_HIGHDIVISION;
+                } else if (t instanceof Division)
+                    return ITEM_TYPE_DIVISION;
+                else if (t instanceof LowDivision)
+                    return ITEM_TYPE_LOWDIVISION;
+                return -1;
+            }
+        };
+        adapter.setExpandCollapseListener(new BaseExpandableAdapter.ExpandCollapseListener() {
             @Override
-            public void onListItemCollapsed(int position) {}// 상위부서 Collapsed 리스너
+            public void onListItemExpanded(int position) {
+
+            }
+
+            @Override
+            public void onListItemCollapsed(int position) {
+
+            }
         });
         rv_division.setAdapter(adapter);
         rv_division.setLayoutManager(new LinearLayoutManager(getActivity()));
