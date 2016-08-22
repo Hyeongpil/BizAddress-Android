@@ -3,6 +3,12 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content" android:padding="10dp">
 
+    <ImageView
+        android:id="@+id/division_high_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/division_arrow"/>
+
     <TextView
         android:id="@+id/division_high_name"
         android:layout_width="wrap_content"
@@ -10,6 +16,7 @@
         android:text="부서"
         android:layout_weight="1"
         android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -20,11 +27,5 @@
         android:src="@drawable/search"
         android:layout_gravity="center"
         android:layout_marginRight="5dp"/>
-
-    <ImageView
-        android:id="@+id/division_high_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/division_arrow"/>
 
 </LinearLayout>

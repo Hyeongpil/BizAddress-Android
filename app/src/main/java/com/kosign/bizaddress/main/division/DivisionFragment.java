@@ -25,10 +25,10 @@ import java.util.ArrayList;
 
 /**
  * Created by Hyeongpil on 2016. 8. 3..
+ * https://github.com/zaihuishou/ExpandableRecyclerview 참조
  */
 public class DivisionFragment extends Fragment{
     final static String TAG = "DivisionFragment";
-    private SwipeRefreshLayout refreshLayout;
     private RecyclerView rv_division;
     private ArrayList<HighDivision> divisionList;
     private BaseExpandableAdapter adapter;
@@ -49,8 +49,6 @@ public class DivisionFragment extends Fragment{
 
     private void init(View view){
         rv_division = (RecyclerView) view.findViewById(R.id.division_recycler);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.division_refresh);
-        refreshLayout.setOnRefreshListener(new RefreshListener());
     }
 
     public void setData (ArrayList<HighDivision> divisionList){
@@ -100,12 +98,6 @@ public class DivisionFragment extends Fragment{
         rv_division.setAdapter(adapter);
         rv_division.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv_division.setHasFixedSize(true);
-    }
-
-    public void stopRefresh(){
-        if(refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(false);
-        }
     }
 
     /**

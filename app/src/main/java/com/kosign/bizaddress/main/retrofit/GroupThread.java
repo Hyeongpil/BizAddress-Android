@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.api.EmplApi;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.StringUtil;
@@ -82,7 +81,6 @@ public class GroupThread extends Thread {
                         Log.e(TAG,"repo :"+groupRepo.getRESP_DATA());
                     }else{ // 예외 처리
                         Toast.makeText(mContext, "그룹 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
-                        ((MainActivity)mContext).stopRefresh();
                         Log.e(TAG,"request :"+call.request());
                         Log.e(TAG,""+groupRepo.getRSLT_MSG());
                         Log.e(TAG,""+groupRepo.getRSLT_CD());

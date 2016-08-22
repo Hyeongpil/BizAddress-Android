@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.DetailActivity;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.kosign.bizaddress.util.Searcher;
@@ -40,7 +38,6 @@ public class AddressFragment extends Fragment {
     private RecyclerView rv_address;
     private CoordinatorLayout mCoordinatorLayout;
     private AddressAdapter adapter;
-    private SwipeRefreshLayout refreshLayout;
     private ArrayList<UserInfo> initialData; // 검색 결과 총 데이터
     private ArrayList<UserInfo> mListData; // 20개씩 끊어서 보여주는 데이터
 
@@ -63,10 +60,8 @@ public class AddressFragment extends Fragment {
     private void init(View view){
         rv_address = (RecyclerView) view.findViewById(R.id.address_recycler);
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.address_coordinatorLayout);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.address_refresh);
         et_search = (EditText) view.findViewById(R.id.address_search);
         iv_clear = (ImageView) view.findViewById(R.id.address_search_clear);
-        refreshLayout.setOnRefreshListener(new RefreshListener());
         adapter = new AddressAdapter(getActivity(),new AddressClickListener());
         rv_address.setAdapter(adapter);
 
@@ -175,9 +170,6 @@ public class AddressFragment extends Fragment {
         mListData = new ArrayList<>(); // mListData 초기화
         mListDataCount = 20; // 카운트 초기화
         this.initialData = initialData;
-        if(refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(false);
-        }
         copyListData();
     }
 
@@ -211,12 +203,6 @@ public class AddressFragment extends Fragment {
         adapter.setData(mListData);
     }
 
-    public void stopRefresh(){
-        if(refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(false);
-        }
-    }
-
     private class BottomRefreshListener extends RecyclerView.OnScrollListener {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -224,7 +210,7 @@ public class AddressFragment extends Fragment {
             if(!searching){ // 검색중이 아닐 때
                 int LastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
 
-                if ((LastVisibleItem) == adapter.getData().size() - 1 && !refreshLayout.isRefreshing() && adapter.getData().size() > 18) {
+                if ((LastVisibleItem) == adapter.getData().size() - 1 && adapter.getData().size() > 18) {
                     mListDataCount += 20; // 바닥에 닿으면 카운트 20씩 증가
                     Log.d(TAG,"BottomRefreshListener mListDataCount :"+mListDataCount);
                     copyListData();
@@ -250,23 +236,6 @@ public class AddressFragment extends Fragment {
                 Log.e(TAG,"addressClickError :"+e.getMessage());
             }
         }
-    }
-
-    /**
-     * 새로고침 시 getEmplData를 호출하여 initialData를 갱신한다
-     */
-    private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
-        @Override
-        public void onRefresh() {
-            refreshing();
-        }
-    }
-
-    public void refreshing(){
-        GlobalApplication.getInstance().showDlgProgress();
-        searching = false;
-        et_search.setText("");
-        ((MainActivity)getActivity()).getEmplData();
     }
 
     public EditText getEt_search() {return et_search;}

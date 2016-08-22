@@ -19,7 +19,6 @@ import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractExpandableAda
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Hyeongpil on 2016. 8. 22..
@@ -86,8 +85,7 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
         mHighDivision = (HighDivision) model;
         tv_highDivision_name.setText(mHighDivision.getHighDivision_name());
 
-        List<?> childItemList = mHighDivision.getChildItemList();
-        if (childItemList == null && childItemList.isEmpty())
+        if (mHighDivision.getChildItemList().size() == 0)
             iv_arrow.setVisibility(View.INVISIBLE);
     }
 

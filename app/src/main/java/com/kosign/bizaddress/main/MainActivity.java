@@ -163,8 +163,12 @@ public class MainActivity extends AppCompatActivity{
      * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
      */
     public void getDivisionEmplData(ArrayList<UserInfo> userdata){
-        divisionDetailFragment.setData(userdata);
-        fl_divisionDetail.setVisibility(View.VISIBLE);
+        if(userdata.size() == 0){
+            Toast.makeText(MainActivity.this, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            divisionDetailFragment.setData(userdata);
+            fl_divisionDetail.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setViewpager(){
@@ -195,7 +199,7 @@ public class MainActivity extends AppCompatActivity{
         public void onClick(View view) {
             GlobalApplication.getInstance().showDlgProgress();
             getDivisionData();
-            addressFragment.refreshing();
+            getEmplData();
         }
     };
 
@@ -226,7 +230,6 @@ public class MainActivity extends AppCompatActivity{
             GlobalApplication.getInstance().dismissDlgProgress();
             addressFragment.setData(emplList);
             GlobalApplication.getInstance().setInitialData(emplList); // 글로벌 어플리케이션에 초기값 저장
-            stopRefresh();
         }
     }
 
@@ -240,7 +243,6 @@ public class MainActivity extends AppCompatActivity{
             super.handleMessage(msg);
             divisionList = (ArrayList<HighDivision>) msg.getData().getSerializable("DivisionThread");
             pref.putDivisionList(divisionList);
-            stopRefresh();
             GlobalApplication.getInstance().dismissDlgProgress();
             divisionFragment.setData(divisionList);
         }
@@ -254,20 +256,8 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            stopRefresh();
             groupFragment.setData(msg.getData());
         }
-    }
-
-    /**
-     * 오류 발생 시 새로고침 멈춤
-     */
-    public void stopRefresh(){
-        GlobalApplication.getInstance().dismissDlgProgress();
-        addressFragment.stopRefresh();
-        // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
-//        groupFragment.stopRefresh();
-        divisionFragment.stopRefresh();
     }
 
     public class ViewPagerScrolledListener implements ViewPager.OnPageChangeListener{

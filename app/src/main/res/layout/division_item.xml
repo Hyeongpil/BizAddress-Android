@@ -3,14 +3,22 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content" android:padding="10dp">
 
+    <ImageView
+        android:id="@+id/division_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:src="@drawable/division_arrow"/>
+
     <TextView
         android:id="@+id/division_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="중간 부서"
         android:layout_weight="1"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="5dp"
         android:layout_gravity="center"
+        android:textColor="@color/defaultText"
         android:textSize="15sp"
         android:textStyle="bold"/>
 
@@ -21,11 +29,5 @@
         android:src="@drawable/search"
         android:layout_gravity="center"
         android:layout_marginRight="5dp"/>
-
-    <ImageView
-        android:id="@+id/division_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/division_arrow"/>
 
 </LinearLayout>

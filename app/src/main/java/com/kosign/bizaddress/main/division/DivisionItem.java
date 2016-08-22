@@ -80,14 +80,15 @@ public class DivisionItem extends AbstractExpandableAdapterItem implements View.
 
     @Override
     public void onClick(View view) {
-        if (getExpandableListItem() != null && getExpandableListItem().getChildItemList() != null) {
+        if(getExpandableListItem().getChildItemList().size() == 0){
+            search(division_map.get(tv_division_name.getText()));
+        }
+        else if (getExpandableListItem() != null && getExpandableListItem().getChildItemList() != null) {
             if (getExpandableListItem().isExpanded()) {
                 collapseView();
             } else {
                 expandView();
             }
-        }else{
-            search(division_map.get(tv_division_name.getText()));
         }
     }
 

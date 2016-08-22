@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.api.EmplApi;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
@@ -128,6 +127,7 @@ public class EmplThread extends Thread {
                             temp.setStrInnerPhone(rec.get(i).getInnerPhoneNum());
                             temp.setStrPhone_contryCode(rec.get(i).getPhone_countryCode());
                             temp.setStrInnerPhone_contryCode(rec.get(i).getInnerPhone_contryCode());
+                            temp.setStrAddress(rec.get(i).getAddress());
                             emplList.add(temp);
                         }
                         //메인의 EmplDataReceiveHandler 로 보내줌
@@ -138,7 +138,6 @@ public class EmplThread extends Thread {
                         handler.sendMessage(msg);
                     }else{
                         Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
-                        ((MainActivity)mContext).stopRefresh();
                         Log.e(TAG,""+emplRepo.getRSLT_MSG());
                     }
                 }
@@ -147,7 +146,6 @@ public class EmplThread extends Thread {
             @Override
             public void onFailure(Call<EmplRepo> call, Throwable t) {
                 Log.e(TAG,"onFailure ,request:"+call.request());
-                ((MainActivity)mContext).stopRefresh();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
                 GlobalApplication.getInstance().dismissDlgProgress();
             }

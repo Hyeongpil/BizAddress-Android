@@ -17,6 +17,7 @@ public class UserInfo implements Serializable{
     String strProfileImg = ""; // 프로필 사진
     String strPhone_contryCode = ""; // 핸드폰 국가 코드
     String strInnerPhone_contryCode = ""; // 내선번호 국가 코드
+    String strAddress = ""; // 주소
 
     public String getStrName() {return strName;}
     public void setStrName(String strName) {this.strName = strName;}
@@ -47,4 +48,7 @@ public class UserInfo implements Serializable{
 
     public String getStrInnerPhone_contryCode() {return strInnerPhone_contryCode;}
     public void setStrInnerPhone_contryCode(String strInnerPhone_contryCode) {this.strInnerPhone_contryCode = strInnerPhone_contryCode;}
+
+    public String getStrAddress() {return strAddress;}
+    public void setStrAddress(String strAddress) {this.strAddress = strAddress;}
 }

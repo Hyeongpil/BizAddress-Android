@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.api.EmplApi;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.EmplPreference;
 import com.kosign.bizaddress.util.GlobalApplication;
@@ -117,7 +116,6 @@ public class DivisionEmplThread extends Thread {
                         Log.e(TAG,""+call.request());
                         Log.e(TAG,""+divisionEmplRepo.getRSLT_CD());
                         Log.e(TAG,""+divisionEmplRepo.getRSLT_MSG());
-                        ((MainActivity)mContext).stopRefresh();
                     }
                 }
             }
@@ -126,7 +124,6 @@ public class DivisionEmplThread extends Thread {
             public void onFailure(Call<DivisionEmplRepo> call, Throwable t) {
 
                 Log.e(TAG,"실패 :"+call.request());
-                ((MainActivity)mContext).stopRefresh();
                 Toast.makeText(mContext, "주소록 불러오기를 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });

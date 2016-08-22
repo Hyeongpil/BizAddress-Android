@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.kosign.bizaddress.api.BizplayApi;
 import com.kosign.bizaddress.api.EmplApi;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.Division;
 import com.kosign.bizaddress.model.HighDivision;
 import com.kosign.bizaddress.model.LowDivision;
@@ -169,14 +168,12 @@ public class DivisionThread extends Thread {
                         Log.e(TAG,""+call.request());
                         Log.e(TAG,""+divisionRepo.getRSLT_CD());
                         Log.e(TAG,""+divisionRepo.getRSLT_MSG());
-                        ((MainActivity)mContext).stopRefresh();
                     }
 
                 }
             }
             @Override
             public void onFailure(Call<DivisionRepo> call, Throwable t) {
-                ((MainActivity)mContext).stopRefresh();
                 Log.e(TAG,"실패 :"+t.getMessage());
             }
         });
