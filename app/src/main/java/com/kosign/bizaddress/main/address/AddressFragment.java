@@ -99,7 +99,6 @@ public class AddressFragment extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                iv_clear.setVisibility(View.VISIBLE);
                 ArrayList<UserInfo> searchInitialData = GlobalApplication.getInstance().getInitialData(); // 검색용 전 직원 데이터
                 if(et_search.isFocusable() && et_search.length() > 0){
                     searching = true;
@@ -151,12 +150,17 @@ public class AddressFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 //검색어가 없으면 초기 데이터를 보여준다
                 if(et_search.isFocusable() && String.valueOf(editable).equals("")){
+                    iv_clear.setVisibility(View.INVISIBLE);
                     mListData = new ArrayList<>(); // mListData 초기화
                     mListDataCount = 20; // 카운트 초기화
                     searching = false;
                     //부서 검색을 했을때도 전체 직원 리스트를 가져오기 위해 글로벌에서 초기화
                     initialData = GlobalApplication.getInstance().getInitialData();
                     copyListData();
+                }
+                //검색어가 존재하면 x 표를 보여준다.
+                if(et_search.isFocusable() && String.valueOf(editable).length() > 0){
+                    iv_clear.setVisibility(View.VISIBLE);
                 }
             }
         };
