@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.DetailActivity;
@@ -200,7 +201,12 @@ public class AddressFragment extends Fragment {
      * 데이터를 어댑터에 붙인다
      */
     public void setAdapterData(ArrayList<UserInfo> mListData){
-        adapter.setData(mListData);
+        try {
+            adapter.setData(mListData);
+        }catch (NullPointerException e){
+            Log.e(TAG,"setAdapterData null");
+            Toast.makeText(getActivity(), "오류가 발생했습니다. 새로고침 해 주세요", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class BottomRefreshListener extends RecyclerView.OnScrollListener {

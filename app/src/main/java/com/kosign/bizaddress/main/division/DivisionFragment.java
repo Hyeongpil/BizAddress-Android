@@ -1,22 +1,25 @@
 package com.kosign.bizaddress.main.division;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.model.Division;
 import com.kosign.bizaddress.model.HighDivision;
 import com.kosign.bizaddress.model.LowDivision;
+import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.zaihuishou.expandablerecycleradapter.adapter.BaseExpandableAdapter;
 import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractAdapterItem;
@@ -30,7 +33,6 @@ import java.util.ArrayList;
 public class DivisionFragment extends Fragment{
     final static String TAG = "DivisionFragment";
     private RecyclerView rv_division;
-    private ArrayList<HighDivision> divisionList;
     private BaseExpandableAdapter adapter;
 
     private final int ITEM_TYPE_HIGHDIVISION = 1;
@@ -51,12 +53,8 @@ public class DivisionFragment extends Fragment{
         rv_division = (RecyclerView) view.findViewById(R.id.division_recycler);
     }
 
-    public void setData (ArrayList<HighDivision> divisionList){
-        this.divisionList = divisionList;
-        setAdapter();
-    }
 
-    private void setAdapter(){
+    public void setAdapter(final ArrayList<HighDivision> divisionList){
         adapter = new BaseExpandableAdapter(divisionList) {
             @NonNull
             @Override
@@ -64,11 +62,11 @@ public class DivisionFragment extends Fragment{
                 int itemType = (int) type;
                 switch (itemType) {
                     case ITEM_TYPE_HIGHDIVISION:
-                        return new HighDivisionItem(getActivity());
+                        return new HighDivisionItem(getActivity(),new DivisionEmplReceiveHandler());
                     case ITEM_TYPE_DIVISION:
-                        return new DivisionItem(getActivity());
+                        return new DivisionItem(getActivity(),new DivisionEmplReceiveHandler());
                     case ITEM_TYPE_LOWDIVISION:
-                        return new LowDivisionItem(getActivity());
+                        return new LowDivisionItem(getActivity(),new DivisionEmplReceiveHandler());
                 }
                 return null;
             }
@@ -100,14 +98,28 @@ public class DivisionFragment extends Fragment{
         rv_division.setHasFixedSize(true);
     }
 
-    /**
-     * 새로고침 시 맨 처음 데이터를 다시 불러온다
-     */
-    private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+    public class DivisionEmplReceiveHandler extends Handler {
         @Override
-        public void onRefresh() {
-            GlobalApplication.getInstance().showDlgProgress();
-            ((MainActivity)getActivity()).getDivisionData();
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ArrayList<UserInfo> userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("DivisionEmplThread");
+            getDivisionEmplData(userdata);
+            GlobalApplication.getInstance().dismissDlgProgress();
+        }
+    }
+
+    /**
+     * DivisionItem 에서 부서 클릭 시
+     * 부서별 직원 데이터를 받아와 DivisionDetailActivity 에 데이터 입력
+     * 부서별 직원 데이터 Api에서는 사진과 사업장명(또는 상위 부서명)을 주지 않는다.
+     */
+    public void getDivisionEmplData(ArrayList<UserInfo> userdata){
+        if(userdata.size() == 0){
+            Toast.makeText(getActivity(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            Intent intent = new Intent(getActivity(), DivisionDetailActivity.class);
+            intent.putExtra("userdata",userdata);
+            startActivity(intent);
         }
     }
 

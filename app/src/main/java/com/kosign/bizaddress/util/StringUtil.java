@@ -1,5 +1,7 @@
 package com.kosign.bizaddress.util;
 
+import android.telephony.PhoneNumberUtils;
+
 /**
  * Created by jung on 2016-02-23.
  */
@@ -68,10 +70,11 @@ public class StringUtil {
     //뷰에 보여지는 번호는 (국가코드) 형태로 한다.
     public static String getViewNum(String num, String code){
         try {
-            if (num.substring(0, 1).equals("0")) {
-                num = num.substring(1);
+            num = PhoneNumberUtils.formatNumber(num);
+            if (!num.substring(0, 1).equals("0")) {
+                num = "0"+num;
             }
-            num = "(" + code.substring(3) + ")" + num;
+            num = "(" + code.substring(3) + ") " + num;
         }catch (Exception e){}
 
         return num;
@@ -83,7 +86,7 @@ public class StringUtil {
             if (num.substring(0, 1).equals("0")) {
                 num = num.substring(1);
             }
-            num = code.substring(3) + num;
+            num = "+"+code.substring(3) + num;
         }catch (Exception e){}
 
         return num;

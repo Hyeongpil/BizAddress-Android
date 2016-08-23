@@ -3,22 +3,18 @@ package com.kosign.bizaddress.main.division;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.main.retrofit.DivisionEmplThread;
 import com.kosign.bizaddress.model.Division;
-import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.zaihuishou.expandablerecycleradapter.model.ExpandableListItem;
 import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractExpandableAdapterItem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,13 +24,16 @@ import java.util.List;
 public class DivisionItem extends AbstractExpandableAdapterItem implements View.OnClickListener {
     final static String TAG = "DivisionItem";
     private Context mContext;
+    private Handler mHandler;
     private TextView tv_division_name;
     private ImageView iv_arrow;
     private ImageView iv_search;
-    private ArrayList<UserInfo> userdata;
     private HashMap<String,String> division_map;
 
-    public DivisionItem(Context mContext) {this.mContext = mContext;}
+    public DivisionItem(Context mContext, Handler DivisionEmplReceiveHandler) {
+        this.mContext = mContext;
+        this.mHandler = DivisionEmplReceiveHandler;
+    }
 
     @Override
     public void onExpansionToggled(boolean expanded) {
@@ -109,21 +108,8 @@ public class DivisionItem extends AbstractExpandableAdapterItem implements View.
         Log.d(TAG,"code :"+division_code);
 
         GlobalApplication.getInstance().showDlgProgress();
-        Handler divisionEmplHandler = new DivisionEmplReceiveHandler();
-        Thread divisionEmplThread = new DivisionEmplThread(divisionEmplHandler, mContext, division_code);
+        Thread divisionEmplThread = new DivisionEmplThread(mHandler, mContext, division_code);
         divisionEmplThread.start();
     }
-    /**
-     * DivisionEmplThread 에서 데이터를 받아
-     * MainActivity로 넘겨줌
-     */
-    private class DivisionEmplReceiveHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("DivisionEmplThread");
-            ((MainActivity)mContext).getDivisionEmplData(userdata);
-            GlobalApplication.getInstance().dismissDlgProgress();
-        }
-    }
+
 }

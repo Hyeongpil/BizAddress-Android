@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".main.MainActivity"/>
         <activity android:name=".main.DetailActivity" android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".main.division.DivisionDetailActivity"/>
     </application>
 
 </manifest>

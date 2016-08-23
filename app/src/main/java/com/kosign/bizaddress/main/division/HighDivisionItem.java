@@ -3,21 +3,17 @@ package com.kosign.bizaddress.main.division;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kosign.bizaddress.R;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.main.retrofit.DivisionEmplThread;
 import com.kosign.bizaddress.model.HighDivision;
-import com.kosign.bizaddress.model.UserInfo;
 import com.kosign.bizaddress.util.GlobalApplication;
 import com.zaihuishou.expandablerecycleradapter.viewholder.AbstractExpandableAdapterItem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -26,16 +22,16 @@ import java.util.HashMap;
 public class HighDivisionItem extends AbstractExpandableAdapterItem {
     final static String TAG = "HighDivisionItem";
     private Context mContext;
+    private Handler mHandler;
     private TextView tv_highDivision_name;
     private ImageView iv_arrow;
     private ImageView iv_search;
-    private HighDivision mHighDivision;
     private String division_code;
     private HashMap<String,String> division_map;
-    private ArrayList<UserInfo> userdata;
 
-    public HighDivisionItem(Context mContext) {
+    public HighDivisionItem(Context mContext ,Handler DivisionEmplReceiveHandler) {
         this.mContext = mContext;
+        this.mHandler = DivisionEmplReceiveHandler;
     }
 
     @Override
@@ -62,10 +58,9 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
 
                 Log.d(TAG,"name :"+tv_highDivision_name.getText());
                 Log.d(TAG,"code :"+division_code);
-
+                //부서별 직원 목록 출력
                 GlobalApplication.getInstance().showDlgProgress();
-                Handler divisionEmplHandler = new HighDivisionEmplReceiveHandler();
-                Thread divisionEmplThread = new DivisionEmplThread(divisionEmplHandler, mContext, division_code);
+                Thread divisionEmplThread = new DivisionEmplThread(mHandler, mContext, division_code);
                 divisionEmplThread.start();
             }
         });
@@ -73,7 +68,6 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
 
     @Override
     public void onSetViews() {
-        iv_arrow.setImageResource(0);
         iv_arrow.setImageResource(R.drawable.division_arrow);
     }
 
@@ -82,10 +76,11 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
         super.onUpdateViews(model, position);
         onSetViews();
         onExpansionToggled(getExpandableListItem().isExpanded());
-        mHighDivision = (HighDivision) model;
+        final HighDivision mHighDivision = (HighDivision) model;
         tv_highDivision_name.setText(mHighDivision.getHighDivision_name());
-        if (mHighDivision.getChildItemList() == null && mHighDivision.getChildItemList().isEmpty())
-            iv_arrow.setVisibility(View.INVISIBLE);
+//        if (mHighDivision.getChildItemList().isEmpty() && mHighDivision.getChildItemList().size() == 0) {
+//            iv_arrow.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
@@ -103,20 +98,6 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(iv_arrow, View.ROTATION, start, target);
         objectAnimator.setDuration(300);
         objectAnimator.start();
-    }
-
-    /**
-     * DivisionEmplThread 에서 데이터를 받아
-     * MainActivity로 넘겨줌
-     */
-    public class HighDivisionEmplReceiveHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            userdata = (ArrayList<UserInfo>) msg.getData().getSerializable("DivisionEmplThread");
-            ((MainActivity)mContext).getDivisionEmplData(userdata);
-            GlobalApplication.getInstance().dismissDlgProgress();
-        }
     }
 
 }

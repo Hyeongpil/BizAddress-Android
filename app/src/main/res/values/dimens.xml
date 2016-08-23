@@ -8,5 +8,6 @@
     <dimen name="detail_profile_marginTop">10dp</dimen>
     <dimen name="detail_icon_marginEnd">20dp</dimen>
     <dimen name="titlebar_left_icon_marginStart">10dp</dimen>
+    <dimen name="address_item_marginBottom">5dp</dimen>
 
 </resources>

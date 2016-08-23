@@ -78,7 +78,11 @@ public class DetailActivity extends Activity{
     }
 
     private void setData(){
-        tv_company.setText(data.getStrCompany());
+        if(data.getStrCompany().equals("")){
+            tv_company.setVisibility(View.GONE);
+        }else{
+            tv_company.setText(data.getStrCompany());
+        }
         tv_name.setText(data.getStrName());
         tv_position.setText(data.getStrPosition());
         tv_address.setText(data.getStrAddress());

@@ -104,7 +104,7 @@ public class DivisionEmplThread extends Thread {
                             temp.setStrProfileImg(rec.get(i).getProfileImg());
                             userdata.add(temp);
                         }
-                        //DivisionViewHolder 로 보내줌
+                        //DivisionFragment 로 보내줌
                         Message msg = Message.obtain();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("DivisionEmplThread", userdata);

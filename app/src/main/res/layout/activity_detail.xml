@@ -186,28 +186,28 @@
                 android:id="@+id/detail_address_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/address_temp"
+                android:background="@drawable/icon_address"
                 android:layout_marginEnd="@dimen/detail_icon_marginEnd"/>
 
             <ImageView
                 android:id="@+id/detail_sms_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/sms_temp"
+                android:background="@drawable/icon_sms"
                 android:layout_marginEnd="@dimen/detail_icon_marginEnd"/>
 
             <ImageView
                 android:id="@+id/detail_email_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/mail_temp"
+                android:background="@drawable/icon_email"
                 android:layout_marginEnd="@dimen/detail_icon_marginEnd"/>
 
             <ImageView
                 android:id="@+id/detail_call_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/call_temp"/>
+                android:background="@drawable/icon_call"/>
 
 
         </LinearLayout>

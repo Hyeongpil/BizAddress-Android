@@ -1,69 +1,67 @@
 package com.kosign.bizaddress.main.division;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.DetailActivity;
-import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.main.address.AddressAdapter;
 import com.kosign.bizaddress.model.UserInfo;
 
 import java.util.ArrayList;
 
 /**
- * Created by Hyeongpil on 2016. 8. 22..
+ * Created by Hyeongpil on 2016. 8. 23..
  */
-public class DivisionDetailFragment extends Fragment {
-    final static String TAG = "DivisionDetailFragment";
+public class DivisionDetailActivity extends AppCompatActivity {
+    final static String TAG = "DivisionDetailActivity";
+    private Context mContext;
     private RecyclerView rv_divisionDetail;
     private AddressAdapter adapter;
     private ArrayList<UserInfo> mListData; // 부서 직원 데이터
     private ImageView iv_back;
     private com.kosign.bizaddress.model.BizTitleBar title;
 
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.division_detail_recycler, container, false);
-
-        init(view);
-
-        return view;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.division_detail_recycler);
+        init();
+        setData();
     }
 
-    private void init(View view){
-        title = (com.kosign.bizaddress.model.BizTitleBar) view.findViewById(R.id.division_detail_title);
-        iv_back = (ImageView)view.findViewById(R.id.iv_title1_left);
+    private void init(){
+        mContext = this;
+        title = (com.kosign.bizaddress.model.BizTitleBar) findViewById(R.id.division_detail_title);
+        iv_back = (ImageView) findViewById(R.id.iv_title1_left);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).division_detail_invisible();
+                finish();
             }
         });
-        rv_divisionDetail = (RecyclerView) view.findViewById(R.id.division_detail_recycler);
-        adapter = new AddressAdapter(getActivity(),new AddressClickListener());
+        rv_divisionDetail = (RecyclerView) findViewById(R.id.division_detail_recycler);
+        adapter = new AddressAdapter(mContext,new AddressClickListener());
         rv_divisionDetail.setAdapter(adapter);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
         rv_divisionDetail.setLayoutManager(manager);
         rv_divisionDetail.setHasFixedSize(true);
     }
 
-    public void setData(ArrayList<UserInfo> mListData){
-        this.mListData = mListData;
+    public void setData(){
+        mListData = (ArrayList<UserInfo>) getIntent().getSerializableExtra("userdata");
         adapter.setData(mListData);
         title.setTitle(mListData.get(0).getStrDivision());
     }
-
 
     /**
      * 연락처 클릭 시 연락처 상세 페이지로
@@ -74,7 +72,7 @@ public class DivisionDetailFragment extends Fragment {
             try {
                 final int position = rv_divisionDetail.getChildLayoutPosition(view);
                 UserInfo temp = mListData.get(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("data", temp);
                 startActivity(intent);
             }catch (IndexOutOfBoundsException e){
@@ -82,7 +80,4 @@ public class DivisionDetailFragment extends Fragment {
             }
         }
     }
-
-
-
 }

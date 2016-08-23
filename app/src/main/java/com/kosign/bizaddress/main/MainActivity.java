@@ -8,20 +8,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.login.LoginActivity;
 import com.kosign.bizaddress.main.address.AddressFragment;
-import com.kosign.bizaddress.main.division.DivisionDetailFragment;
 import com.kosign.bizaddress.main.division.DivisionFragment;
 import com.kosign.bizaddress.main.group.GroupFragment;
 import com.kosign.bizaddress.main.retrofit.DivisionThread;
@@ -44,14 +41,12 @@ public class MainActivity extends AppCompatActivity{
     final static String TAG = "MainActivity";
     private final long	FINSH_INTERVAL_TIME    = 2000;
     private long		backPressedTime        = 0;
-    private FrameLayout fl_divisionDetail;
     private ImageView refresh;
     private ImageView logout;
     private ViewPageAdapter adapter;
     private ViewPager viewPager;
     private AddressFragment addressFragment;
     private DivisionFragment divisionFragment;
-    private DivisionDetailFragment divisionDetailFragment;
     private GroupFragment groupFragment;
     private ArrayList<UserInfo> emplList = new ArrayList<>();
     private ArrayList<HighDivision> divisionList = new ArrayList<>();
@@ -67,10 +62,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView (R.layout.activity_main);
 
         init();
-        checkEmplData();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        getGroupData();
         setViewpager();
+        checkEmplData();
     }
 
     private void init(){
@@ -78,10 +73,8 @@ public class MainActivity extends AppCompatActivity{
         GlobalApplication.getInstance().setDlgProgress(dlgProgress);
         addressFragment = new AddressFragment();
         divisionFragment = new DivisionFragment();
-        divisionDetailFragment = new DivisionDetailFragment();
         // TODO: 2016. 8. 10. 그룹 추가 시 주석 풀기
 //        groupFragment = new GroupFragment();
-        fl_divisionDetail = (FrameLayout)findViewById(R.id.fl_division_detail);
         refresh = (ImageView)findViewById(R.id.iv_title4_left);
         logout = (ImageView)findViewById(R.id.iv_title4_right);
         refresh.setOnClickListener(refreshClickListener);
@@ -90,11 +83,6 @@ public class MainActivity extends AppCompatActivity{
         //타이틀 세팅
         title = (com.kosign.bizaddress.model.BizTitleBar)findViewById(R.id.BizTitleBar);
         title.setTitle(pref.getString("BSNN_NM"));
-        //프레그먼트 매니저
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fl_division_detail, divisionDetailFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     /**
@@ -120,11 +108,11 @@ public class MainActivity extends AppCompatActivity{
                 if(divisionList == null){
                     getDivisionData();
                 }else{
-                    divisionFragment.setData(divisionList);
+                    divisionFragment.setAdapter(divisionList);
                     GlobalApplication.getInstance().setDivision_map(divisionMap);
                 }
             }
-        },100);
+        },200);
     }
 
     /**
@@ -155,20 +143,6 @@ public class MainActivity extends AppCompatActivity{
         Handler groupHandler = new GroupDataReceiveHandler();
         Thread groupThread = new GroupThread(groupHandler,MainActivity.this);
         groupThread.start();
-    }
-
-    /**
-     * DivisionViewHolder 에서 부서 클릭 시 또는 GroupFragment 에서 그룹 클릭 시
-     * 부서별 직원 데이터를 받아와 DivisionDetailFragment 에 데이터 입력
-     * 부서별 직원 데이터 Api에서는 사진을 주지 않는다.
-     */
-    public void getDivisionEmplData(ArrayList<UserInfo> userdata){
-        if(userdata.size() == 0){
-            Toast.makeText(MainActivity.this, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
-        }else{
-            divisionDetailFragment.setData(userdata);
-            fl_divisionDetail.setVisibility(View.VISIBLE);
-        }
     }
 
     private void setViewpager(){
@@ -244,7 +218,7 @@ public class MainActivity extends AppCompatActivity{
             divisionList = (ArrayList<HighDivision>) msg.getData().getSerializable("DivisionThread");
             pref.putDivisionList(divisionList);
             GlobalApplication.getInstance().dismissDlgProgress();
-            divisionFragment.setData(divisionList);
+            divisionFragment.setAdapter(divisionList);
         }
     }
 
@@ -285,16 +259,10 @@ public class MainActivity extends AppCompatActivity{
             moveTaskToBack(true);
             finish();
             android.os.Process.killProcess(android.os.Process.myPid());
-        }else if(fl_divisionDetail.getVisibility() == View.VISIBLE){
-            //부서 직원 목록이 켜져 있다면 끔
-            division_detail_invisible();
         }else {
             backPressedTime = tempTime;
             Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한번더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
         }
-    }
-    public void division_detail_invisible(){
-        fl_divisionDetail.setVisibility(View.INVISIBLE);
     }
 
 }
