@@ -28,6 +28,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Hyeongpil on 2016. 8. 4..
  * 직원 목록을 가져오는 스레드
+ * https://github.com/square/retrofit 참조
  */
 
 public class EmplThread extends Thread {

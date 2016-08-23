@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Hyeongpil on 2016. 8. 23..
+ * 부서 직원목록 Activity
+ * emplinfo25 api에서는 프로필 사진과 사업장명을 주지 않는다.
  */
 public class DivisionDetailActivity extends AppCompatActivity {
     final static String TAG = "DivisionDetailActivity";

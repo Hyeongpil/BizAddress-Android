@@ -13,6 +13,7 @@ import retrofit2.http.Query;
 
 /**
  * Created by Hyeongpil on 2016. 8. 4..
+ * Gson 파싱
  */
 public class EmplRepo implements Serializable{
     @SerializedName("RESP_DATA") ArrayList<RESP_DATA> RESP_DATA;
