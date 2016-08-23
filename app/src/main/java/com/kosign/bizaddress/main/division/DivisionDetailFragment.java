@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.kosign.bizaddress.R;
 import com.kosign.bizaddress.main.DetailActivity;
+import com.kosign.bizaddress.main.MainActivity;
 import com.kosign.bizaddress.main.address.AddressAdapter;
 import com.kosign.bizaddress.model.UserInfo;
 
@@ -25,6 +27,8 @@ public class DivisionDetailFragment extends Fragment {
     private RecyclerView rv_divisionDetail;
     private AddressAdapter adapter;
     private ArrayList<UserInfo> mListData; // 부서 직원 데이터
+    private ImageView iv_back;
+    private com.kosign.bizaddress.model.BizTitleBar title;
 
     @Nullable
     @Override
@@ -37,6 +41,14 @@ public class DivisionDetailFragment extends Fragment {
     }
 
     private void init(View view){
+        title = (com.kosign.bizaddress.model.BizTitleBar) view.findViewById(R.id.division_detail_title);
+        iv_back = (ImageView)view.findViewById(R.id.iv_title1_left);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).division_detail_invisible();
+            }
+        });
         rv_divisionDetail = (RecyclerView) view.findViewById(R.id.division_detail_recycler);
         adapter = new AddressAdapter(getActivity(),new AddressClickListener());
         rv_divisionDetail.setAdapter(adapter);
@@ -49,6 +61,7 @@ public class DivisionDetailFragment extends Fragment {
     public void setData(ArrayList<UserInfo> mListData){
         this.mListData = mListData;
         adapter.setData(mListData);
+        title.setTitle(mListData.get(0).getStrDivision());
     }
 
 

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -58,6 +59,7 @@ public class DetailActivity extends Activity{
 
     private void init(){
         mContext = this;
+        data = (UserInfo) getIntent().getSerializableExtra("data");
         tv_company = (TextView) findViewById(R.id.detail_company);
         tv_name = (TextView) findViewById(R.id.detail_name);
         tv_phonenum = (TextView) findViewById(R.id.detail_phonenum);
@@ -71,7 +73,6 @@ public class DetailActivity extends Activity{
         iv_call = (ImageView) findViewById(R.id.detail_call_icon);
         iv_email = (ImageView) findViewById(R.id.detail_email_icon);
         ll_address = (LinearLayout) findViewById(R.id.detail_address_ll);
-        data = (UserInfo) getIntent().getSerializableExtra("data");
         clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         phone = StringUtil.getCallNum(data.getStrPhone(),data.getStrPhone_contryCode());
     }
@@ -81,9 +82,12 @@ public class DetailActivity extends Activity{
         tv_name.setText(data.getStrName());
         tv_position.setText(data.getStrPosition());
         tv_address.setText(data.getStrAddress());
-        if(data.getStrAddress().equals("")){
-            ll_address.setVisibility(View.GONE);
-        }
+        try {
+            if (data.getStrAddress().equals("")) {
+                ll_address.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            Log.e(TAG,"예외 발생 :"+e.getMessage());}
         tv_phonenum.setText(StringUtil.getViewNum(data.getStrPhone(),data.getStrPhone_contryCode()));
         tv_division.setText(data.getStrDivision());
         tv_email.setText(data.getStrEmail());

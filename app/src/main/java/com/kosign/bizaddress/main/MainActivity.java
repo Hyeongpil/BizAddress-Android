@@ -287,10 +287,14 @@ public class MainActivity extends AppCompatActivity{
             android.os.Process.killProcess(android.os.Process.myPid());
         }else if(fl_divisionDetail.getVisibility() == View.VISIBLE){
             //부서 직원 목록이 켜져 있다면 끔
-            fl_divisionDetail.setVisibility(View.INVISIBLE);
+            division_detail_invisible();
         }else {
             backPressedTime = tempTime;
             Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한번더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
         }
     }
+    public void division_detail_invisible(){
+        fl_divisionDetail.setVisibility(View.INVISIBLE);
+    }
+
 }

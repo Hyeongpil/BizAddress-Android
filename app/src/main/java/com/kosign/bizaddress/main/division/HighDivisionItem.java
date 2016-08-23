@@ -84,8 +84,7 @@ public class HighDivisionItem extends AbstractExpandableAdapterItem {
         onExpansionToggled(getExpandableListItem().isExpanded());
         mHighDivision = (HighDivision) model;
         tv_highDivision_name.setText(mHighDivision.getHighDivision_name());
-
-        if (mHighDivision.getChildItemList().size() == 0)
+        if (mHighDivision.getChildItemList() == null && mHighDivision.getChildItemList().isEmpty())
             iv_arrow.setVisibility(View.INVISIBLE);
     }
 

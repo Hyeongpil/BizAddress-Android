@@ -34,15 +34,13 @@
         android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_scrollFlags="scroll|enterAlways" />
-
+    <!--부서 상세보기 프레그먼트-->
     <FrameLayout
         android:id="@+id/fl_division_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tab_layout"
         android:visibility="invisible"
         android:background="@color/white">
-
     </FrameLayout>
 
 </RelativeLayout>

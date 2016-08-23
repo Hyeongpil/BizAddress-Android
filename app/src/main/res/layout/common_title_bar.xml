@@ -40,7 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/titlebar_left_icon_marginStart"
+                android:src="@drawable/back_btn"/>
 
             <TextView
                 android:id="@+id/tv_title1_title"
@@ -150,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/titlebar_left_icon_marginStart"
                 android:background="@drawable/refresh" />
 
             <TextView

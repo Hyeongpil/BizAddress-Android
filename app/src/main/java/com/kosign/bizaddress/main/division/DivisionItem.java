@@ -41,10 +41,10 @@ public class DivisionItem extends AbstractExpandableAdapterItem implements View.
         float start, target;
         if (expanded) {
             start = 0f;
-            target = 90f;
+            target = 180f;
             tv_division_name.setTextColor(GlobalApplication.getInstance().getResources().getColor(R.color.common_titlebar));
         } else {
-            start = 90f;
+            start = 180f;
             target = 0f;
             tv_division_name.setTextColor(GlobalApplication.getInstance().getResources().getColor(R.color.defaultText));
         }
