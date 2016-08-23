@@ -161,6 +161,7 @@ public class DivisionThread extends Thread {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("DivisionThread", divisionList);
                         pref.putDivisionHashMap(division_map);
+                        GlobalApplication.getInstance().setDivision_map(division_map);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
                     }else{
@@ -169,7 +170,6 @@ public class DivisionThread extends Thread {
                         Log.e(TAG,""+divisionRepo.getRSLT_CD());
                         Log.e(TAG,""+divisionRepo.getRSLT_MSG());
                     }
-
                 }
             }
             @Override

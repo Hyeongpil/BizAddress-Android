@@ -43,10 +43,15 @@ public class LowDivisionItem extends AbstractAdapterItem {
             @Override
             public void onClick(View view) {
                 // 하위부서인 경우 앞의 "  ㄴ "을 제거
-                if(division_map.get(tv_lowDivision_name.getText()) == null){
-                    String name = (String)tv_lowDivision_name.getText().subSequence(5,tv_lowDivision_name.length());
-                    division_code = division_map.get(name);
-                }else{ // 보통의 경우
+                try {
+                    if (division_map.get(tv_lowDivision_name.getText()) == null) {
+                        String name = (String) tv_lowDivision_name.getText().subSequence(5, tv_lowDivision_name.length());
+                        division_code = division_map.get(name);
+                    } else { // 보통의 경우
+                        division_code = division_map.get(tv_lowDivision_name.getText());
+                    }
+                }catch (StringIndexOutOfBoundsException e){
+                    Log.e(TAG,""+e.getMessage());
                     division_code = division_map.get(tv_lowDivision_name.getText());
                 }
 
